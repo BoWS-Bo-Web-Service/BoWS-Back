@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "project") // todo: 테이블 이름
+@Table(name = "PROJECT") // todo: 테이블 이름
 @Getter
 @Setter
 @AllArgsConstructor
