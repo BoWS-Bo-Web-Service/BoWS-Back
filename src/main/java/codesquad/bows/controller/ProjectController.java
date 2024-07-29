@@ -1,5 +1,6 @@
 package codesquad.bows.controller;
 
+import codesquad.bows.dto.ProjectMetaData;
 import codesquad.bows.entity.Project;
 import codesquad.bows.service.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public List<Project> getProjects() {
-        return projectService.findAll();
+    public List<ProjectMetaData> getProjectList() {
+        return projectService.findAllMetaData();
     }
 
     @PostMapping
