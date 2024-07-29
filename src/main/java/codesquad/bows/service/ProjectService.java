@@ -26,8 +26,6 @@ public class ProjectService {
     }
 
     public List<ProjectMetaData> findAllMetaData() {
-        return projectRepository.findAll().stream()
-                .map(project -> new ProjectMetaData(project.getProjectName(), project.getDomain(), project.getCreatedAt()))
-                .toList();
+        return projectRepository.findAllBy();
     }
 }
