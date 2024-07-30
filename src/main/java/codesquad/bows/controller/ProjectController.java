@@ -1,13 +1,15 @@
 package codesquad.bows.controller;
 
-import codesquad.bows.dto.ProjectDetailResponse;
+import codesquad.bows.dto.ProjectMetadata;
+import codesquad.bows.entity.Project;
 import codesquad.bows.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import codesquad.bows.dto.ProjectDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 
 @Controller
@@ -20,5 +22,15 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDetailResponse> getProjectDetail(@PathVariable Long projectId) {
         return ResponseEntity.ok(projectService.getProjectDetail(projectId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProjectMetadata>> getProjectList() {
+        return ResponseEntity.ok(projectService.findAllMetaData());
+    }
+
+    @PostMapping
+    public void createProject(@RequestBody Project project) {
+        projectService.addProject(project);
     }
 }
