@@ -1,21 +1,28 @@
 package codesquad.bows.service;
 
+import codesquad.bows.dto.ProjectDetailResponse;
+import codesquad.bows.dto.ProjectMetadata;
+import codesquad.bows.dto.ServiceMetadata;
+import codesquad.bows.repository.ProjectRepository;
 
-import codesquad.bows.dto.ProjectMetaData;
 import codesquad.bows.entity.Project;
-import codesquad.bows.entity.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final KubeExecutor kubeExecutor;
+
+    public ProjectDetailResponse getProjectDetail(Long projectId) {
+        ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId);
+        List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectMetadata.projectName());
+        return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
+    }
 
     public List<Project> findAll() {
         return projectRepository.findAll();
@@ -25,7 +32,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public List<ProjectMetaData> findAllMetaData() {
-        return projectRepository.findAllBy();
+    public List<ProjectMetadata> findAllMetaData() {
+        return projectRepository.findAllProjectMetadata();
     }
 }

@@ -1,45 +1,51 @@
 package codesquad.bows.entity;
 
+import codesquad.bows.common.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Entity
-@Table(name = "PROJECT") // todo: 테이블 이름
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "PROJECT")
 public class Project extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
-
-    @Column(name = "PROJECT_NAME", nullable = false)
+    @NotNull
+    @Column(name = "PROJECT_NAME")
     private String projectName;
 
-    @Column(name = "DOMAIN", nullable = false)
+    @NotNull
+    @Column(name = "DOMAIN")
     private String domain;
 
-    @Column(name = "BACKEND_IMAGE_NAME", nullable = false)
+    @NotNull
+    @Column(name = "BACKEND_IMAGE_NAME")
     private String backendImageName;
 
-    @Column(name = "FRONTEND_IMAGE_NAME", nullable = false)
+    @NotNull
+    @Column(name = "FRONTEND_IMAGE_NAME")
     private String frontendImageName;
 
-    @Column(name = "DB_PASSWORD", nullable = false)
+    @NotNull
+    @Column(name = "DB_PASSWORD")
     private String dbPassword;
 
-    @Column(name = "DB_ENDPOINT", nullable = false)
+    @NotNull
+    @Column(name = "DB_ENDPOINT")
     private String dbEndpoint;
 
-    @Column(name = "DB_USER_NAME", nullable = false)
+    @NotNull
+    @Column(name = "DB_USER_NAME")
     private String dbUserName;
 
-    @Column(name = "DB_USER_PASSWORD", nullable = false)
+    @NotNull
+    @Column(name = "DB_USER_PASSWORD")
     private String dbUserPassword;
 }

@@ -1,4 +1,4 @@
-package codesquad.bows.entity;
+package codesquad.bows.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
