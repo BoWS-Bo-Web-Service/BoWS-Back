@@ -29,6 +29,9 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.2'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// k8s client
+	implementation 'io.kubernetes:client-java-extended:21.0.0'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
