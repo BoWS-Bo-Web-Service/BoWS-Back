@@ -31,3 +31,6 @@ cors:
 
 kube:
   configPath: "/.kube/config"
+  helm:
+    repoName: "simpleApp"
+    chartName: "bows-simpleApp"
