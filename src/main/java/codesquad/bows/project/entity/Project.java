@@ -1,4 +1,4 @@
-package codesquad.bows.entity;
+package codesquad.bows.project.entity;
 
 import codesquad.bows.common.BaseTimeEntity;
 import jakarta.persistence.*;

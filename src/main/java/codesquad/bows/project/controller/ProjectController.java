@@ -1,12 +1,12 @@
-package codesquad.bows.controller;
+package codesquad.bows.project.controller;
 
-import codesquad.bows.dto.ProjectCreateRequest;
-import codesquad.bows.dto.ProjectMetadata;
-import codesquad.bows.service.ProjectService;
+import codesquad.bows.project.dto.ProjectCreateRequest;
+import codesquad.bows.project.dto.ProjectMetadata;
+import codesquad.bows.project.dto.ProjectDetailResponse;
+import codesquad.bows.project.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import codesquad.bows.dto.ProjectDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 

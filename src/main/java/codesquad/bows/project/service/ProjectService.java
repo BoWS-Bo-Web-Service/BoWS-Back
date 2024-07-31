@@ -1,11 +1,11 @@
-package codesquad.bows.service;
+package codesquad.bows.project.service;
 
-import codesquad.bows.dto.ProjectDetailResponse;
-import codesquad.bows.dto.ProjectMetadata;
-import codesquad.bows.dto.ServiceMetadata;
-import codesquad.bows.repository.ProjectRepository;
+import codesquad.bows.project.dto.ProjectDetailResponse;
+import codesquad.bows.project.dto.ProjectMetadata;
+import codesquad.bows.project.dto.ServiceMetadata;
+import codesquad.bows.project.repository.ProjectRepository;
 
-import codesquad.bows.entity.Project;
+import codesquad.bows.project.entity.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

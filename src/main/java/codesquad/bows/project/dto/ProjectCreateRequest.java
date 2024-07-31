@@ -1,6 +1,6 @@
-package codesquad.bows.dto;
+package codesquad.bows.project.dto;
 
-import codesquad.bows.entity.Project;
+import codesquad.bows.project.entity.Project;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

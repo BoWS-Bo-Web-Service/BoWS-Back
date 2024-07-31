@@ -1,4 +1,4 @@
-package codesquad.bows.exception;
+package codesquad.bows.project.exception;
 
 import codesquad.bows.global.exception.BusinessException;
 import codesquad.bows.global.exception.ExceptionType;

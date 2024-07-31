@@ -1,4 +1,4 @@
-package codesquad.bows.dto;
+package codesquad.bows.project.dto;
 
 import java.time.LocalDateTime;
 

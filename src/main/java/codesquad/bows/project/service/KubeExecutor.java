@@ -1,10 +1,10 @@
-package codesquad.bows.service;
+package codesquad.bows.project.service;
 
-import codesquad.bows.dto.ServiceMetadata;
-import codesquad.bows.entity.Project;
-import codesquad.bows.exception.KubeException;
-import codesquad.bows.exception.DeletionFailedException;
-import codesquad.bows.exception.CreationFailedException;
+import codesquad.bows.project.dto.ServiceMetadata;
+import codesquad.bows.project.entity.Project;
+import codesquad.bows.project.exception.KubeException;
+import codesquad.bows.project.exception.DeletionFailedException;
+import codesquad.bows.project.exception.CreationFailedException;
 import io.kubernetes.client.extended.kubectl.Kubectl;
 import io.kubernetes.client.extended.kubectl.exception.KubectlException;
 import io.kubernetes.client.openapi.models.V1Service;
