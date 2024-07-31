@@ -23,6 +23,7 @@ public class MemberService {
         Member member = Member.builder()
                 .username(data.getUsername())
                 .password(passwordEncoder.encode(data.getPassword()))
+                .role("Role_USER")
                 .build();
         memberRepository.save(member);
     }
