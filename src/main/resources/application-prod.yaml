@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: prod
 
   application:
     name: bows
@@ -27,7 +27,7 @@ spring:
     open-in-view: false
 
 cors:
-  originUrl: http://localhost:8080
+  originUrl: http://bows.co.kr:81
 
 kube:
   configPath: "/.kube/config"

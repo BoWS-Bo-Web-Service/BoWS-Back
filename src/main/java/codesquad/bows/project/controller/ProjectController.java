@@ -1,11 +1,12 @@
-package codesquad.bows.controller;
+package codesquad.bows.project.controller;
 
-import codesquad.bows.dto.ProjectMetadata;
-import codesquad.bows.entity.Project;
-import codesquad.bows.service.ProjectService;
+import codesquad.bows.project.dto.ProjectCreateRequest;
+import codesquad.bows.project.dto.ProjectMetadata;
+import codesquad.bows.project.dto.ProjectDetailResponse;
+import codesquad.bows.project.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import codesquad.bows.dto.ProjectDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -19,6 +20,18 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+    @PostMapping
+    public ResponseEntity<Void> createProject(@Valid @RequestBody ProjectCreateRequest request) {
+        projectService.addProject(request.toEntity());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
+        projectService.deleteProject(projectId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDetailResponse> getProjectDetail(@PathVariable Long projectId) {
         return ResponseEntity.ok(projectService.getProjectDetail(projectId));
@@ -27,10 +40,5 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<List<ProjectMetadata>> getProjectList() {
         return ResponseEntity.ok(projectService.findAllMetaData());
-    }
-
-    @PostMapping
-    public void createProject(@RequestBody Project project) {
-        projectService.addProject(project);
     }
 }
