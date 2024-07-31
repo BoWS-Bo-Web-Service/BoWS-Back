@@ -3,6 +3,7 @@ package codesquad.bows.service;
 
 import codesquad.bows.dto.MemberRegisterData;
 import codesquad.bows.entity.Member;
+import codesquad.bows.entity.Role;
 import codesquad.bows.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +24,7 @@ public class MemberService {
         Member member = Member.builder()
                 .username(data.getUsername())
                 .password(passwordEncoder.encode(data.getPassword()))
-                .role("Role_USER")
+                .role(Role.USER)
                 .build();
         memberRepository.save(member);
     }

@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
-                .roles("USER") // TODO : ROLE 추가해야 한다.
+                .roles(member.getRole().name()) // TODO : ROLE 추가해야 한다.
                 .build();
     }
 }
