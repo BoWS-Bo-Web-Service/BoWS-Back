@@ -3,4 +3,6 @@
 build
 HELP.md
 out
-./src/resources/application.yaml
+./src/resources/application-prod.yaml
+./src/resources/schema.sql
+./src/resources/data.sql
