@@ -21,9 +21,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<Void> createProject(@Valid @RequestBody ProjectCreateRequest request) {
-        projectService.addProject(request.toEntity());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> createProject(@Valid @RequestBody ProjectCreateRequest request) {
+        return ResponseEntity.ok(projectService.addProject(request.toEntity()));
     }
 
     @DeleteMapping("/{projectId}")

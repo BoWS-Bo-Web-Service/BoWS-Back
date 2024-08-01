@@ -37,9 +37,10 @@ public class ProjectService {
     }
 
     @Transactional
-    public void addProject(Project project) {
+    public Long addProject(Project project) {
         Project savedProject = projectRepository.save(project);
         kubeExecutor.createProjectInCluster(savedProject);
+        return savedProject.getId();
     }
 
     public List<ProjectMetadata> findAllMetaData() {

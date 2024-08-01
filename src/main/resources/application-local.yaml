@@ -27,7 +27,7 @@ spring:
     open-in-view: false
 
 cors:
-  originUrl: http://localhost:8080
+  originUrl: http://localhost:5173
 
 kube:
   configPath: "/.kube/config"
