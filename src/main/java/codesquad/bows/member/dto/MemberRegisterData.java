@@ -11,4 +11,7 @@ public class MemberRegisterData {
 
     @NotNull
     private String password;
+
+    @NotNull
+    private String invitationCode;
 }

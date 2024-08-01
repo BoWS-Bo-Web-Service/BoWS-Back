@@ -23,10 +23,10 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private static final String INVITATION_CODE = "ASDF";
+
     public void register(MemberRegisterData data) {
-        if (memberRepository.findByUsername(data.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-        }
+        validRegisterData(data);
 
         Role userRole = roleRepository.findByName(RoleName.USER.name())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Role이 존재하지 않습니다."));
@@ -37,5 +37,15 @@ public class MemberService {
                 .roles(Set.of(userRole))
                 .build();
         memberRepository.save(member);
+    }
+
+    private void validRegisterData(MemberRegisterData data) {
+        if (!data.getInvitationCode().equals(INVITATION_CODE)) {
+            throw new IllegalArgumentException("초대코드가 일치하지 않습니다.");
+        }
+
+        if (memberRepository.findByUsername(data.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
     }
 }
