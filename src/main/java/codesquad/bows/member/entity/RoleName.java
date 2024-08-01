@@ -1,7 +1,10 @@
 package codesquad.bows.member.entity;
 
+import lombok.Getter;
+
 import java.util.Set;
 
+@Getter
 public enum RoleName {
     ADMIN(Set.of(AuthorityName.ADMIN, AuthorityName.PROJECT_EDIT, AuthorityName.PROJECT_READ)),
     USER(Set.of(AuthorityName.PROJECT_EDIT, AuthorityName.PROJECT_READ)),
@@ -11,9 +14,5 @@ public enum RoleName {
 
     RoleName(Set<AuthorityName> authorityNames) {
         this.authorities = authorityNames;
-    }
-
-    public Set<AuthorityName> getAuthorities() {
-        return authorities;
     }
 }
