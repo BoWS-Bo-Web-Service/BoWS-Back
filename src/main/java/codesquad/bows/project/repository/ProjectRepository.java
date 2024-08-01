@@ -11,14 +11,14 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query(""" 
-           SELECT new codesquad.bows.project.dto.ProjectMetadata(p.projectName, p.createdAt, p.domain)
+           SELECT new codesquad.bows.project.dto.ProjectMetadata(p.id, p.projectName, p.createdAt, p.domain)
            FROM Project p
            WHERE p.id = :id
            """)
     ProjectMetadata getMetadataById(@Param("id") Long id);
 
     @Query(""" 
-           SELECT new codesquad.bows.project.dto.ProjectMetadata(p.projectName, p.createdAt, p.domain)
+           SELECT new codesquad.bows.project.dto.ProjectMetadata(p.id, p.projectName, p.createdAt, p.domain)
            FROM Project p
            """)
     List<ProjectMetadata> findAllProjectMetadata();
