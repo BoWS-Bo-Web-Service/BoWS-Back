@@ -1,6 +1,6 @@
 package codesquad.bows.global.config;
 
-import codesquad.bows.service.CustomUserDetailsService;
+import codesquad.bows.member.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -38,7 +37,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/api/members/login") // 로그인에 사용될 API 
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/asdjkl") // 로그인 성공 시 이동할 URL
+                        .defaultSuccessUrl("/loginSuccess") // 로그인 성공 시 이동할 URL
                         .permitAll());
 
         return httpSecurity.build();

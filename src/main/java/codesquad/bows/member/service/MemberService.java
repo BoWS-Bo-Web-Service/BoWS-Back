@@ -1,10 +1,9 @@
-package codesquad.bows.service;
+package codesquad.bows.member.service;
 
 
-import codesquad.bows.dto.MemberRegisterData;
-import codesquad.bows.entity.Member;
-import codesquad.bows.entity.Role;
-import codesquad.bows.repository.MemberRepository;
+import codesquad.bows.member.dto.MemberRegisterData;
+import codesquad.bows.member.entity.Member;
+import codesquad.bows.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class MemberService {
         Member member = Member.builder()
                 .username(data.getUsername())
                 .password(passwordEncoder.encode(data.getPassword()))
-                .role(Role.USER)
+                // todo : role 줘야함
                 .build();
         memberRepository.save(member);
     }

@@ -1,4 +1,4 @@
-package codesquad.bows.dto;
+package codesquad.bows.member.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

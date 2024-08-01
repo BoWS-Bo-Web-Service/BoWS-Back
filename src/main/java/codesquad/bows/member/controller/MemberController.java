@@ -1,7 +1,7 @@
-package codesquad.bows.controller;
+package codesquad.bows.member.controller;
 
-import codesquad.bows.dto.MemberRegisterData;
-import codesquad.bows.service.MemberService;
+import codesquad.bows.member.dto.MemberRegisterData;
+import codesquad.bows.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

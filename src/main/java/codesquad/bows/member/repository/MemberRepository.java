@@ -1,6 +1,6 @@
-package codesquad.bows.repository;
+package codesquad.bows.member.repository;
 
-import codesquad.bows.entity.Member;
+import codesquad.bows.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package codesquad.bows.entity;
+package codesquad.bows.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
