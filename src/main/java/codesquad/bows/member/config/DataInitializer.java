@@ -6,10 +6,10 @@ import codesquad.bows.member.entity.AuthorityName;
 import codesquad.bows.member.entity.RoleName;
 import codesquad.bows.member.repository.RoleRepository;
 import codesquad.bows.member.repository.AuthorityRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 
