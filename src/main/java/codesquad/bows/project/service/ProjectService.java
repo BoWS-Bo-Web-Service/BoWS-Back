@@ -19,6 +19,10 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final KubeExecutor kubeExecutor;
 
+    /*
+    TODO : 해당 프로젝트의 생성자와 READ_ONLY 들이 확인할 수 있어야 한다.
+        그러러면 프로젝트를 생성할 때 사용자의 ID가 PROJECT에 포함되어야 한다.
+     */
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
@@ -31,14 +35,14 @@ public class ProjectService {
     @Transactional
     public void deleteProject(Long projectId) {
         projectRepository.deleteById(projectId);
-        kubeExecutor.deleteProjectInCluster(projectId);
+        //kubeExecutor.deleteProjectInCluster(projectId);
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public void addProject(Project project) {
         Project savedProject = projectRepository.save(project);
-        kubeExecutor.createProjectInCluster(savedProject);
+        //kubeExecutor.createProjectInCluster(savedProject);
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")

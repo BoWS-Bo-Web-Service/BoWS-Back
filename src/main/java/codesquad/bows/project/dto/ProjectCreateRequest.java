@@ -43,8 +43,8 @@ public record ProjectCreateRequest(
         String dbUserPassword
 ) {
 
-    public Project toEntity() {
+    public Project toEntity(Long createdBy) {
         return new Project(projectName, domain, backendImageName, frontendImageName,
-                dbPassword, dbEndpoint, dbUserName, dbUserPassword);
+                dbPassword, dbEndpoint, dbUserName, dbUserPassword, createdBy);
     }
 }
