@@ -6,6 +6,7 @@ import codesquad.bows.member.entity.Role;
 import codesquad.bows.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,9 +29,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : member.getRoles()) {
-            authorities.add(() -> "ROLE_" + role.getName());
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
             for (Authority authority : role.getAuthorities()) {
-                authorities.add(() -> authority.getName());
+                authorities.add(new SimpleGrantedAuthority(authority.getName()));
             }
         }
 
