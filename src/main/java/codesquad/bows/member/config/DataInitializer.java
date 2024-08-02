@@ -1,10 +1,9 @@
 package codesquad.bows.member.config;
 
-import codesquad.bows.member.dto.MemberRegisterData;
 import codesquad.bows.member.entity.*;
+import codesquad.bows.member.repository.AuthorityRepository;
 import codesquad.bows.member.repository.MemberRepository;
 import codesquad.bows.member.repository.RoleRepository;
-import codesquad.bows.member.repository.AuthorityRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
