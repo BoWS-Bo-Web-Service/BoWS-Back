@@ -41,9 +41,10 @@ public class ProjectService {
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
-    public void addProject(Project project) {
+    public Long addProject(Project project) {
         Project savedProject = projectRepository.save(project);
         kubeExecutor.createProjectInCluster(savedProject);
+        return savedProject.getId();
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")
