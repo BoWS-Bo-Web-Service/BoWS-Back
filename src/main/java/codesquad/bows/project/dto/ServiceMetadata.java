@@ -1,18 +1,21 @@
 package codesquad.bows.project.dto;
 
+import io.kubernetes.client.openapi.models.V1ContainerStatus;
 import io.kubernetes.client.openapi.models.V1Service;
 import io.kubernetes.client.openapi.models.V1ServicePort;
 
 import java.util.List;
 
-public record ServiceMetadata(
+public record ServicePodMetadata(
         String serviceName,
         List<String> externalIps,
         List<Integer> ports,
-        String age
+        String age,
+        String imageName,
+        String
 ) {
 
-    public static ServiceMetadata of(V1Service service) {
+    public static ServicePodMetadata of(V1Service service, V1ContainerStatus containerStatus) {
 
         String name = service.getMetadata().getName();
         List<String> externalIPs = service.getSpec().getExternalIPs();
@@ -22,6 +25,6 @@ public record ServiceMetadata(
                 .toList();
         String creationTimestamp = service.getMetadata().getCreationTimestamp().toString();
 
-        return new ServiceMetadata(name, externalIPs, ports, creationTimestamp);
+        return new ServicePodMetadata(name, externalIPs, ports, creationTimestamp);
     }
 }
