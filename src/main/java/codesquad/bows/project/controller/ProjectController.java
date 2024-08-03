@@ -1,5 +1,6 @@
 package codesquad.bows.project.controller;
 
+import codesquad.bows.common.SecurityUtils;
 import codesquad.bows.project.dto.ProjectCreateRequest;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ProjectDetailResponse;
@@ -22,7 +23,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<Long> createProject(@Valid @RequestBody ProjectCreateRequest request) {
-        return ResponseEntity.ok(projectService.addProject(request.toEntity()));
+        return ResponseEntity.ok(projectService.addProject(request.toEntity(SecurityUtils.getLoginUserId())));
     }
 
     @DeleteMapping("/{projectId}")
