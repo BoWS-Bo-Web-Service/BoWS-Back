@@ -9,10 +9,14 @@ public record ServiceMetadata(
         String serviceName,
         List<String> externalIps,
         List<Integer> ports,
-        String age
+        String age,
+        String imageName,
+        String state,
+        String stateReason,
+        String stateMessage
 ) {
 
-    public static ServiceMetadata of(V1Service service) {
+    public static ServiceMetadata of(V1Service service, ServiceState serviceState) {
 
         String name = service.getMetadata().getName();
         List<String> externalIPs = service.getSpec().getExternalIPs();
@@ -22,6 +26,7 @@ public record ServiceMetadata(
                 .toList();
         String creationTimestamp = service.getMetadata().getCreationTimestamp().toString();
 
-        return new ServiceMetadata(name, externalIPs, ports, creationTimestamp);
+        return new ServiceMetadata(name, externalIPs, ports, creationTimestamp,
+                serviceState.imageName(), serviceState.state(), serviceState.reason(), serviceState.message());
     }
 }
