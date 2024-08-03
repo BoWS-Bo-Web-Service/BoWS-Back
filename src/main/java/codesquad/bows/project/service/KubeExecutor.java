@@ -1,19 +1,20 @@
 package codesquad.bows.project.service;
 
 import codesquad.bows.project.dto.ServiceMetadata;
+import codesquad.bows.project.dto.ServiceState;
 import codesquad.bows.project.entity.Project;
 import codesquad.bows.project.exception.KubeException;
 import codesquad.bows.project.exception.DeletionFailedException;
 import codesquad.bows.project.exception.CreationFailedException;
-import io.kubernetes.client.extended.kubectl.Kubectl;
-import io.kubernetes.client.extended.kubectl.exception.KubectlException;
+import io.kubernetes.client.openapi.ApiException;
+import io.kubernetes.client.openapi.apis.CoreV1Api;
+import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +29,8 @@ public class KubeExecutor {
 
     @Value("${kube.helm.chartName}")
     private String CHART_NAME;
+
+    private final CoreV1Api coreV1Api;
 
 
     public void createProjectInCluster(Project project){
@@ -46,16 +49,46 @@ public class KubeExecutor {
     }
 
     public List<ServiceMetadata> getServiceMetadataOf(String projectName) {
-        List<V1Service> services = new ArrayList<>();
         try {
-            services = Kubectl.get(V1Service.class).namespace("my-app").execute();
-        } catch (KubectlException e) {
+            List<V1Service> services = coreV1Api
+                    .listNamespacedService("my-app")
+                    .labelSelector("projectName" + "=" + projectName)
+                    .execute().getItems();
+
+            return services.stream()
+                    .map(service -> ServiceMetadata.of(service, getServiceStateFrom(service)))
+                    .toList();
+
+        } catch (ApiException e) {
             log.error(e.getMessage());
+
             throw new KubeException();
         }
-        return services.stream()
-                .filter(service -> service.getMetadata().getLabels().containsValue(projectName))
-                .map(ServiceMetadata::of)
-                .toList();
+    }
+
+    // Service 당 Application 실행을 위한 Pod 한개, Pod 1개에 Container 1개로 전제
+    public ServiceState getServiceStateFrom(V1Service service) {
+        try {
+            String labelSelector = getLabelSelector(service);
+            V1Pod pod = coreV1Api.listNamespacedPod("my-app")
+                    .labelSelector(labelSelector)
+                    .execute()
+                    .getItems()
+                    .get(0);
+
+            return ServiceState.from(pod.getStatus().getContainerStatuses().get(0));
+
+        } catch (ApiException e) {
+            log.error(e.getMessage());
+
+            throw new KubeException();
+        }
+    }
+
+    private String getLabelSelector(V1Service service) {
+
+        return service.getSpec().getSelector().entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining(","));
     }
 }
