@@ -3,6 +3,7 @@ package codesquad.bows.project.service;
 import codesquad.bows.project.dto.ProjectDetailResponse;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ServiceMetadata;
+import codesquad.bows.project.exception.DuplicatedDomainException;
 import codesquad.bows.project.repository.ProjectRepository;
 
 import codesquad.bows.project.entity.Project;
@@ -38,6 +39,9 @@ public class ProjectService {
 
     @Transactional
     public Long addProject(Project project) {
+        if (projectRepository.existsByDomain(project.getDomain())) {
+            throw new DuplicatedDomainException();
+        }
         Project savedProject = projectRepository.save(project);
         kubeExecutor.createProjectInCluster(savedProject);
         return savedProject.getId();

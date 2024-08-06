@@ -33,6 +33,7 @@ public class KubeExecutor {
     private final CoreV1Api coreV1Api;
 
 
+    // ProjectId를 Release 이름으로 설정하여 Helm 배포 커맨드 생성
     public void createProjectInCluster(Project project){
         Map<String, String> projectOptions = project.getProjectOptions();
         String arguments = projectOptions.entrySet().stream()
