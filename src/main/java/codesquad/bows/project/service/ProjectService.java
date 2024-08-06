@@ -4,6 +4,7 @@ import codesquad.bows.project.dto.ProjectDetailResponse;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ServiceMetadata;
 import codesquad.bows.project.exception.DuplicatedDomainException;
+import codesquad.bows.project.exception.ProjectNotExistsException;
 import codesquad.bows.project.repository.ProjectRepository;
 
 import codesquad.bows.project.entity.Project;
@@ -22,6 +23,9 @@ public class ProjectService {
 
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
+        if (!projectRepository.existsById(projectId)){
+            throw new ProjectNotExistsException();
+        }
         ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId);
         List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectMetadata.projectName());
         return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
@@ -29,6 +33,9 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(Long projectId) {
+        if (!projectRepository.existsById(projectId)){
+            throw new ProjectNotExistsException();
+        }
         projectRepository.deleteById(projectId);
         kubeExecutor.deleteProjectInCluster(projectId);
     }
