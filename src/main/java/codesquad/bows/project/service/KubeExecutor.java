@@ -33,6 +33,7 @@ public class KubeExecutor {
     private final CoreV1Api coreV1Api;
 
 
+    // ProjectId를 Release 이름으로 설정하여 Helm 배포 커맨드 생성
     public void createProjectInCluster(Project project){
         Map<String, String> projectOptions = project.getProjectOptions();
         String arguments = projectOptions.entrySet().stream()
@@ -59,7 +60,7 @@ public class KubeExecutor {
                     .map(service -> ServiceMetadata.of(service, getServiceStateFrom(service)))
                     .toList();
 
-        } catch (ApiException e) {
+        } catch (ApiException | NullPointerException e) {
             log.error(e.getMessage());
 
             throw new KubeException();
@@ -78,7 +79,7 @@ public class KubeExecutor {
 
             return ServiceState.from(pod.getStatus().getContainerStatuses().get(0));
 
-        } catch (ApiException e) {
+        } catch (ApiException | NullPointerException e) {
             log.error(e.getMessage());
 
             throw new KubeException();
@@ -86,9 +87,14 @@ public class KubeExecutor {
     }
 
     private String getLabelSelector(V1Service service) {
+        try{
+            return service.getSpec().getSelector().entrySet().stream()
+                    .map(entry -> entry.getKey() + "=" + entry.getValue())
+                    .collect(Collectors.joining(","));
+        } catch (NullPointerException e) {
+            log.error(e.getMessage());
 
-        return service.getSpec().getSelector().entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining(","));
+            throw new KubeException();
+        }
     }
 }

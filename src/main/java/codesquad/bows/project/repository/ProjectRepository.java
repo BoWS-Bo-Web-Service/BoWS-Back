@@ -22,4 +22,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
            FROM Project p
            """)
     List<ProjectMetadata> findAllProjectMetadata();
+
+    boolean existsByDomain(String domain);
 }
