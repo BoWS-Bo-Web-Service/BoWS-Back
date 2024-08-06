@@ -9,8 +9,8 @@ import jakarta.validation.constraints.Size;
 public record ProjectCreateRequest(
 
         @NotBlank
-        @Pattern(regexp = "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
-        message = "영문 소문자와 숫자, 특수문자(- . _만 가능)로만 이루어져야 합니다(특수문자로 시작하거나 끝나선 안 됩니다)")
+        @Pattern(regexp = "^(?!\\d+$)([a-z0-9]+([.\\-_][a-z0-9]+)*)$",
+                message = "소문자, 숫자와 점(.), 대시(-), 밑줄(_)만 사용할 수 있습니다 (특수문자는 소문자, 숫자 사이 사용)")
         @Size(max = 30)
         String projectName,
 
