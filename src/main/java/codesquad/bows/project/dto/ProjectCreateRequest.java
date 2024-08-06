@@ -10,7 +10,7 @@ public record ProjectCreateRequest(
 
         @NotBlank
         @Pattern(regexp = "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
-        message = "영문 소문자와 숫자, 특수문자로만 이루어져야 합니다(특수문자로 시작하거나 끝나선 안 됩니다)")
+        message = "영문 소문자와 숫자, 특수문자(- . _만 가능)로만 이루어져야 합니다(특수문자로 시작하거나 끝나선 안 됩니다)")
         @Size(max = 30)
         String projectName,
 
