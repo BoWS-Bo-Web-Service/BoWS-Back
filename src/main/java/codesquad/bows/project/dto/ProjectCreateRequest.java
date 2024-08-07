@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
 
 public record ProjectCreateRequest(
 
@@ -27,6 +28,10 @@ public record ProjectCreateRequest(
         String frontendImageName,
 
         @NotNull
+        @Range(min = 1, max = 3)
+        Integer dbStorageSize,
+
+        @NotNull
         @Size(min = 5, max = 30)
         String dbPassword,
 
@@ -45,6 +50,6 @@ public record ProjectCreateRequest(
 
     public Project toEntity() {
         return new Project(projectName, domain, backendImageName, frontendImageName,
-                dbPassword, dbEndpoint, dbUserName, dbUserPassword);
+                dbStorageSize, dbPassword, dbEndpoint, dbUserName, dbUserPassword);
     }
 }
