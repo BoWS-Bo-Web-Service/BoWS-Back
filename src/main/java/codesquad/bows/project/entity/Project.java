@@ -37,6 +37,10 @@ public class Project extends BaseTimeEntity {
     private String frontendImageName;
 
     @NotNull
+    @Column(name = "DB_STORAGE_SIZE")
+    private Integer dbStorageSize;
+
+    @NotNull
     @Column(name = "DB_PASSWORD")
     private String dbPassword;
 
@@ -53,11 +57,12 @@ public class Project extends BaseTimeEntity {
     private String dbUserPassword;
 
     public Project(String projectName, String domain, String backendImageName, String frontendImageName,
-                   String dbPassword, String dbEndpoint, String dbUserName, String dbUserPassword) {
+                   Integer dbStorageSize, String dbPassword, String dbEndpoint, String dbUserName, String dbUserPassword) {
         this.projectName = projectName;
         this.domain = domain;
         this.backendImageName = backendImageName;
         this.frontendImageName = frontendImageName;
+        this.dbStorageSize = dbStorageSize;
         this.dbPassword = dbPassword;
         this.dbEndpoint = dbEndpoint;
         this.dbUserName = dbUserName;
@@ -71,6 +76,7 @@ public class Project extends BaseTimeEntity {
         helmCLIArguments.put("domain", this.domain);
         helmCLIArguments.put("app.backend.image.name", this.backendImageName);
         helmCLIArguments.put("app.frontend.image.name", this.frontendImageName);
+        helmCLIArguments.put("app.db.storageSize", this.dbStorageSize + "Gi");
         helmCLIArguments.put("app.db.env.MYSQL_ROOT_PASSWORD", this.dbPassword);
         helmCLIArguments.put("app.db.env.MYSQL_DATABASE", this.dbEndpoint);
         helmCLIArguments.put("app.db.env.MYSQL_USER", this.dbUserName);
