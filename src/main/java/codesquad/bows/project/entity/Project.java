@@ -4,6 +4,7 @@ import codesquad.bows.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +41,10 @@ public class Project extends BaseTimeEntity {
     @Column(name = "DB_STORAGE_SIZE")
     private Integer dbStorageSize;
 
+    @Lob
+    @Column(name = "DB_SCHEMA")
+    private String dbSchema;
+
     @NotNull
     @Column(name = "DB_PASSWORD")
     private String dbPassword;
@@ -57,12 +62,14 @@ public class Project extends BaseTimeEntity {
     private String dbUserPassword;
 
     public Project(String projectName, String domain, String backendImageName, String frontendImageName,
-                   Integer dbStorageSize, String dbPassword, String dbEndpoint, String dbUserName, String dbUserPassword) {
+                   Integer dbStorageSize, String dbSchema,
+                   String dbPassword, String dbEndpoint, String dbUserName, String dbUserPassword) {
         this.projectName = projectName;
         this.domain = domain;
         this.backendImageName = backendImageName;
         this.frontendImageName = frontendImageName;
         this.dbStorageSize = dbStorageSize;
+        this.dbSchema = dbSchema;
         this.dbPassword = dbPassword;
         this.dbEndpoint = dbEndpoint;
         this.dbUserName = dbUserName;

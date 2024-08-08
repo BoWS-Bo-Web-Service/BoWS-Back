@@ -6,6 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public record ProjectCreateRequest(
 
@@ -32,6 +36,9 @@ public record ProjectCreateRequest(
         Integer dbStorageSize,
 
         @NotNull
+        MultipartFile dbSchemaFile,
+
+        @NotNull
         @Size(min = 5, max = 30)
         String dbPassword,
 
@@ -49,7 +56,12 @@ public record ProjectCreateRequest(
 ) {
 
     public Project toEntity() {
-        return new Project(projectName, domain, backendImageName, frontendImageName,
-                dbStorageSize, dbPassword, dbEndpoint, dbUserName, dbUserPassword);
+            try {
+                    String dbSchema = new String(dbSchemaFile.getBytes(), StandardCharsets.UTF_8);
+                    return new Project(projectName, domain, backendImageName, frontendImageName,
+                            dbStorageSize, dbSchema, dbPassword, dbEndpoint, dbUserName, dbUserPassword);
+            } catch (IOException e) {
+                    throw new IllegalArgumentException("파일을 읽는 도중 실패했습니다");
+            }
     }
 }
