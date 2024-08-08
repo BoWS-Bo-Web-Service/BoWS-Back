@@ -84,6 +84,7 @@ public class Project extends BaseTimeEntity {
         helmCLIArguments.put("app.backend.image.name", this.backendImageName);
         helmCLIArguments.put("app.frontend.image.name", this.frontendImageName);
         helmCLIArguments.put("app.db.storageSize", this.dbStorageSize + "Gi");
+        helmCLIArguments.put("app.db.schema", this.dbSchema);
         helmCLIArguments.put("app.db.env.MYSQL_ROOT_PASSWORD", this.dbPassword);
         helmCLIArguments.put("app.db.env.MYSQL_DATABASE", this.dbEndpoint);
         helmCLIArguments.put("app.db.env.MYSQL_USER", this.dbUserName);

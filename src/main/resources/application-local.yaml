@@ -37,5 +37,5 @@ kube:
 
 file:
   multipart:
-    max-upload-size: 10
-    max-request-size: 10
+    max-upload-size: 100
+    max-request-size: 100
