@@ -5,6 +5,8 @@ import codesquad.bows.member.dto.MemberRegisterData;
 import codesquad.bows.member.entity.Member;
 import codesquad.bows.member.entity.Role;
 import codesquad.bows.member.entity.RoleName;
+import codesquad.bows.member.exception.InvitationCodeMismatchException;
+import codesquad.bows.member.exception.UsernameAlreadyExistsException;
 import codesquad.bows.member.repository.MemberRepository;
 import codesquad.bows.member.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +43,11 @@ public class MemberService {
 
     private void validRegisterData(MemberRegisterData data) {
         if (!data.getInvitationCode().equals(INVITATION_CODE)) {
-            throw new IllegalArgumentException("초대코드가 일치하지 않습니다.");
+            throw new InvitationCodeMismatchException();
         }
 
         if (memberRepository.findByUsername(data.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+            throw new UsernameAlreadyExistsException();
         }
     }
 }

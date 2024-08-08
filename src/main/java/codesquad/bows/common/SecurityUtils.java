@@ -1,6 +1,7 @@
 package codesquad.bows.common;
 
 import codesquad.bows.member.entity.CustomUserDetails;
+import codesquad.bows.member.exception.UnauthenticatedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -11,7 +12,6 @@ public class SecurityUtils {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             return userDetails.getId();
         }
-        // TODO : 로그인 하지 않은 사용자를 위한 익셉션이 필요
-        throw new IllegalArgumentException("로그인 하지 않은 상태입니다.");
+        throw new UnauthenticatedException();
     }
 }

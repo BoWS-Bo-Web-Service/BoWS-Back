@@ -27,7 +27,7 @@ public class ProjectService {
         """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
-        ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId); // optional ㄱㅊ?
+        ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId);
         List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectMetadata.projectName());
         return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
     }
