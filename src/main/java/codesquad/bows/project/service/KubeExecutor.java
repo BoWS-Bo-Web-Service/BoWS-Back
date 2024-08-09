@@ -39,8 +39,10 @@ public class KubeExecutor {
         String arguments = projectOptions.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining(",", "--set ", ""));
+        log.info(projectOptions.get("app.db.schema"));
+        log.info(arguments);
 
-        String command = "helm install " + project.getId() + " " + HELM_REPO_NAME + "/" + CHART_NAME + " " + arguments;
+        String command = "helm install " + project.getId() + " " + CHART_NAME + " " + arguments;
         BashExecutor.executeCommand(command, CreationFailedException::new);
     }
 
