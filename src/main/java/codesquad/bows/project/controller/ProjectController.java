@@ -6,9 +6,11 @@ import codesquad.bows.project.dto.ProjectDetailResponse;
 import codesquad.bows.project.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,9 +22,12 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @PostMapping
-    public ResponseEntity<Long> createProject(@Valid @RequestBody ProjectCreateRequest request) {
-        return ResponseEntity.ok(projectService.addProject(request.toEntity()));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> createProject(
+            @Valid @ModelAttribute ProjectCreateRequest request,
+            @RequestPart(value = "dbSchemaFile") MultipartFile dbSchemaFile
+    ) {
+        return ResponseEntity.ok(projectService.addProject(request.toEntity(dbSchemaFile)));
     }
 
     @DeleteMapping("/{projectId}")

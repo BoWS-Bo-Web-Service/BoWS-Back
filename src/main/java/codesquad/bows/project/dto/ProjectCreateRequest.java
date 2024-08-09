@@ -36,9 +36,6 @@ public record ProjectCreateRequest(
         Integer dbStorageSize,
 
         @NotNull
-        MultipartFile dbSchemaFile,
-
-        @NotNull
         @Size(min = 5, max = 30)
         String dbPassword,
 
@@ -55,7 +52,7 @@ public record ProjectCreateRequest(
         String dbUserPassword
 ) {
 
-    public Project toEntity() {
+    public Project toEntity(MultipartFile dbSchemaFile) {
             try {
                     String dbSchema = new String(dbSchemaFile.getBytes(), StandardCharsets.UTF_8);
                     return new Project(projectName, domain, backendImageName, frontendImageName,
