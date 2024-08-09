@@ -42,7 +42,7 @@ public class KubeExecutor {
         log.info(projectOptions.get("app.db.schema"));
         log.info(arguments);
 
-        String command = "helm install " + project.getId() + " " + CHART_NAME + " " + arguments;
+        String command = "helm install " + project.getId() + " " + HELM_REPO_NAME + "/" + CHART_NAME + " " + arguments;
         BashExecutor.executeCommand(command, CreationFailedException::new);
     }
 
