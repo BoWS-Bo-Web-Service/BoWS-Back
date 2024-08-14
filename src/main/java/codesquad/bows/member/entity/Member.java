@@ -26,6 +26,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @Column(name = "NAME", nullable = false)
+    private String name;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "MEMBER_ROLE",

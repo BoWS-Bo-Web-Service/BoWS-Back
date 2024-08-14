@@ -32,10 +32,10 @@ public class DataInitializer {
         initRoles();
 
         // Admin 계정 등록
-        createMember("admin", "admin", RoleName.ADMIN);
+        createMember("admin", "admin", RoleName.ADMIN, "관리자");
 
         // Readonly 계정 등록
-        createMember("guest", "guest", RoleName.READ_ONLY);
+        createMember("guest", "guest", RoleName.READ_ONLY, "게스트");
     }
 
     private void initRoles() {
@@ -61,7 +61,7 @@ public class DataInitializer {
         }
     }
 
-    private void createMember(String username, String password, RoleName roleName) {
+    private void createMember(String username, String password, RoleName roleName, String name) {
         if (memberRepository.findByUsername(username).isPresent())
             return;
 
@@ -71,6 +71,7 @@ public class DataInitializer {
         Member adminMember = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
+                .name(name)
                 .roles(Set.of(adminRole))
                 .build();
         memberRepository.save(adminMember);

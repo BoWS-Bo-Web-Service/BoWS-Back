@@ -36,14 +36,14 @@ public class ProjectService {
     @Transactional
     public void deleteProject(Long projectId) {
         projectRepository.deleteById(projectId);
-        kubeExecutor.deleteProjectInCluster(projectId);
+//        kubeExecutor.deleteProjectInCluster(projectId);
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public Long addProject(Project project) {
         Project savedProject = projectRepository.save(project);
-        kubeExecutor.createProjectInCluster(savedProject);
+//        kubeExecutor.createProjectInCluster(savedProject);
         return savedProject.getId();
     }
 
