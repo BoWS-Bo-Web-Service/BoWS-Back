@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByUsername(username)
+        Member member = memberRepository.findByUserId(username)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다."));
 
         Set<GrantedAuthority> authorities = new HashSet<>();
@@ -35,6 +35,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
         }
 
-        return new CustomUserDetails(member.getUsername(), member.getPassword(), authorities, member.getId());
+        return new CustomUserDetails(member.getUserId(), member.getPassword(), authorities, member.getId());
     }
 }

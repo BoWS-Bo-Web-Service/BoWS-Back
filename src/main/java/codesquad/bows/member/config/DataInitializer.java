@@ -62,14 +62,14 @@ public class DataInitializer {
     }
 
     private void createMember(String username, String password, RoleName roleName, String name) {
-        if (memberRepository.findByUsername(username).isPresent())
+        if (memberRepository.findByUserId(username).isPresent())
             return;
 
         Role adminRole = roleRepository.findByName(roleName.name())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Role이 존재하지 않습니다."));
 
         Member adminMember = Member.builder()
-                .username(username)
+                .userId(username)
                 .password(passwordEncoder.encode(password))
                 .name(name)
                 .roles(Set.of(adminRole))

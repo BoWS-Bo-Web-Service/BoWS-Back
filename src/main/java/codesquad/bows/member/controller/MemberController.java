@@ -2,6 +2,7 @@ package codesquad.bows.member.controller;
 
 import codesquad.bows.member.dto.MemberRegisterData;
 import codesquad.bows.member.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody MemberRegisterData data) {
+    public ResponseEntity<Void> register(@RequestBody @Valid MemberRegisterData data) {
         memberService.register(data);
         return ResponseEntity.ok().build();
     }

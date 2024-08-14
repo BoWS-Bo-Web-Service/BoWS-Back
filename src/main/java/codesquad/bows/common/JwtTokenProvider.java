@@ -17,7 +17,7 @@ public class JwtTokenProvider {
 
     private SecretKey secretKey; //JWT 토큰 객체 키를 저장할 시크릿 키
 
-    public JwtTokenProvider(@Value("${spring.jwtseretkey}") String secret) {
+    public JwtTokenProvider(@Value("${spring.jwtsecretkey}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm()
         );
     }

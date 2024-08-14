@@ -34,7 +34,7 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Role이 존재하지 않습니다."));
 
         Member member = Member.builder()
-                .username(data.getUsername())
+                .userId(data.getUserId())
                 .password(passwordEncoder.encode(data.getPassword()))
                 .name(data.getName())
                 .roles(Set.of(userRole))
@@ -47,7 +47,7 @@ public class MemberService {
             throw new InvitationCodeMismatchException();
         }
 
-        if (memberRepository.findByUsername(data.getUsername()).isPresent()) {
+        if (memberRepository.findByUserId(data.getUserId()).isPresent()) {
             throw new UsernameAlreadyExistsException();
         }
     }

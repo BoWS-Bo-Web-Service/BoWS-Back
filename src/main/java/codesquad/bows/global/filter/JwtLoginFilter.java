@@ -19,13 +19,17 @@ import java.util.Map;
 
 public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final String LOGIN_URL = "/api/members/login";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String TOKEN_PREFIX = "Bearer ";
+
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
     public JwtLoginFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
-        setFilterProcessesUrl("/api/members/login"); // 로그인 요청을 받을 URL
+        setFilterProcessesUrl(LOGIN_URL); // 로그인 요청을 받을 URL
     }
 
     @Override
@@ -33,12 +37,9 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         try {
             // JSON 데이터를 파싱하여 username과 password를 추출
-            Map<String, String> creds = new ObjectMapper().readValue(request.getInputStream(), Map.class);
-            String username = creds.get("username");
-            String password = creds.get("password");
-
-            System.out.println("LOGIN password = " + password);
-            System.out.println("LOGIN username = " + username);
+            Map<String, String> jsonBody = new ObjectMapper().readValue(request.getInputStream(), Map.class);
+            String username = jsonBody.get("userId");
+            String password = jsonBody.get("password");
 
             // authenticationManager 에 인증을 위한 username, password를 전달하기 위한 객체.
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
@@ -60,7 +61,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .toList();
         String token = jwtTokenProvider.createJwt(userDetails.getUsername(), authorities, 3600000L);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + token);
 
         // 토큰을 JSON형태로 보내려면 이것 사용
 //        response.setContentType("application/json");
