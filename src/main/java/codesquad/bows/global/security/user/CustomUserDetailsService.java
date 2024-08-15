@@ -1,7 +1,7 @@
-package codesquad.bows.member.service;
+package codesquad.bows.global.security.user;
 
 import codesquad.bows.member.entity.Authority;
-import codesquad.bows.member.entity.CustomUserDetails;
+import codesquad.bows.global.security.user.CustomUserDetails;
 import codesquad.bows.member.entity.Member;
 import codesquad.bows.member.entity.Role;
 import codesquad.bows.member.repository.MemberRepository;

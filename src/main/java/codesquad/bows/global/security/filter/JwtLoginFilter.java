@@ -1,7 +1,7 @@
-package codesquad.bows.global.filter;
+package codesquad.bows.global.security.filter;
 
 import codesquad.bows.common.JwtTokenProvider;
-import codesquad.bows.member.entity.CustomUserDetails;
+import codesquad.bows.global.security.user.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,9 +11,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +28,10 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtLoginFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public JwtLoginFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, AuthenticationFailureHandler authFailureHandler) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        setAuthenticationFailureHandler(authFailureHandler);
         setFilterProcessesUrl(LOGIN_URL); // 로그인 요청을 받을 URL
     }
 
@@ -61,18 +64,19 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .toList();
         String token = jwtTokenProvider.createJwt(userDetails.getUsername(), authorities, 3600000L);
 
-        response.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + token);
+        // Authorization Header에 보내려면 이것.
+//        response.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + token);
 
-        // 토큰을 JSON형태로 보내려면 이것 사용
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        Map<String, String> tokenResponse = new HashMap<>();
-//        tokenResponse.put("token", token);
-//        new ObjectMapper().writeValue(response.getWriter(), tokenResponse);
+//         토큰을 JSON형태로 보내려면 이것 사용
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        Map<String, String> tokenResponse = new HashMap<>();
+        tokenResponse.put("token", token);
+        new ObjectMapper().writeValue(response.getWriter(), tokenResponse);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        getFailureHandler().onAuthenticationFailure(request, response, failed);
     }
 }

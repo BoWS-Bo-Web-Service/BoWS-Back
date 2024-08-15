@@ -1,15 +1,15 @@
-package codesquad.bows.global.config;
+package codesquad.bows.global.security.config;
 
 import codesquad.bows.common.JwtTokenProvider;
-import codesquad.bows.global.filter.JwtAuthorizationFilter;
-import codesquad.bows.global.filter.JwtLoginFilter;
-import codesquad.bows.member.service.CustomUserDetailsService;
+import codesquad.bows.global.security.filter.CustomAuthenticationFailureHandler;
+import codesquad.bows.global.security.filter.JwtAuthorizationFilter;
+import codesquad.bows.global.security.filter.JwtLoginFilter;
+import codesquad.bows.global.security.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,9 +42,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+        CustomAuthenticationFailureHandler authFailureHandler = new CustomAuthenticationFailureHandler();
 
         // JwtLoginFilter에 AuthenticationManager 주입
-        JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(authenticationManager, jwtTokenProvider);
+        JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(authenticationManager, jwtTokenProvider, authFailureHandler);
         JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(jwtTokenProvider, customUserDetailsService);
 
         httpSecurity

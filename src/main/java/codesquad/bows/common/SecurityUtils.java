@@ -1,6 +1,6 @@
 package codesquad.bows.common;
 
-import codesquad.bows.member.entity.CustomUserDetails;
+import codesquad.bows.global.security.user.CustomUserDetails;
 import codesquad.bows.member.exception.UnauthenticatedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
