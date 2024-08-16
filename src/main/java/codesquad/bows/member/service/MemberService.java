@@ -6,15 +6,20 @@ import codesquad.bows.member.entity.Member;
 import codesquad.bows.member.entity.Role;
 import codesquad.bows.member.entity.RoleName;
 import codesquad.bows.member.exception.InvitationCodeMismatchException;
+import codesquad.bows.member.exception.RoleNotExistsException;
 import codesquad.bows.member.exception.UsernameAlreadyExistsException;
 import codesquad.bows.member.repository.MemberRepository;
 import codesquad.bows.member.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -25,29 +30,33 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private static final String INVITATION_CODE = "ASDF";
+    @Value("${security.invitationCode}")
+    private String INVITATION_CODE;
 
     public void register(MemberRegisterData data) {
         validRegisterData(data);
 
-        Role userRole = roleRepository.findByName(RoleName.USER.name())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 Role이 존재하지 않습니다."));
+        Optional<Role> userRoleOptional = roleRepository.findByName(RoleName.USER.name());
+        if(userRoleOptional.isEmpty()){
+            log.error("해당하는 Role이 존재하지 않습니다");
+            throw new RoleNotExistsException();
+        }
 
         Member member = Member.builder()
-                .userId(data.getUserId())
-                .password(passwordEncoder.encode(data.getPassword()))
-                .name(data.getName())
-                .roles(Set.of(userRole))
+                .userId(data.userId())
+                .password(passwordEncoder.encode(data.password()))
+                .name(data.name())
+                .roles(Set.of(userRoleOptional.get()))
                 .build();
         memberRepository.save(member);
     }
 
     private void validRegisterData(MemberRegisterData data) {
-        if (!data.getInvitationCode().equals(INVITATION_CODE)) {
+        if (!data.invitationCode().equals(INVITATION_CODE)) {
             throw new InvitationCodeMismatchException();
         }
 
-        if (memberRepository.findByUserId(data.getUserId()).isPresent()) {
+        if (memberRepository.findByUserId(data.userId()).isPresent()) {
             throw new UsernameAlreadyExistsException();
         }
     }

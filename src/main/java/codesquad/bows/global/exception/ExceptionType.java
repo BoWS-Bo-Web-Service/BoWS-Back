@@ -10,6 +10,7 @@ public enum ExceptionType {
     UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, 4001, "인증되지 않은 사용자입니다"),
     INVITATION_CODE_MISMATCH(HttpStatus.BAD_REQUEST, 4002, "초대코드가 일치하지 않습니다."),
     USERNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, 4003, "중복된 아이디를 입력했습니다."),
+    ROLE_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 4004, "회원가입이 실패했습니다. 관리자에게 문의해주세요"),
 
     // PROJECT CRUD
     PROJECT_CREATE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "프로젝트 생성에 실패했습니다"),
