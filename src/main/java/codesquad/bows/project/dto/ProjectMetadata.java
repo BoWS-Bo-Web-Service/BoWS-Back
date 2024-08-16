@@ -7,6 +7,6 @@ public record ProjectMetadata(
         String projectName,
         LocalDateTime projectCreatedTime,
         String domain,
-        Long createdBy
+        String createdBy
 ) {
 }

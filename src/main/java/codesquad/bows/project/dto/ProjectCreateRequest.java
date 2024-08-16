@@ -52,7 +52,7 @@ public record ProjectCreateRequest(
         String dbUserPassword
 ) {
 
-    public Project toEntity(MultipartFile dbSchemaFile, Long createdBy) {
+    public Project toEntity(MultipartFile dbSchemaFile, String createdBy) {
             try {
                     String dbSchema = new String(dbSchemaFile.getBytes(), StandardCharsets.UTF_8);
                     return new Project(projectName, domain, backendImageName, frontendImageName,

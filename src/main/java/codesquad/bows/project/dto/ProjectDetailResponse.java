@@ -8,7 +8,7 @@ public record ProjectDetailResponse(
         String projectName,
         LocalDateTime projectCreatedTime,
         String domain,
-        Long createdBy,
+        String createdBy,
         List<ServiceMetadata> serviceMetadata
 ) {
 

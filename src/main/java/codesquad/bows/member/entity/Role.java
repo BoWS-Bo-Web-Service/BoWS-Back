@@ -1,5 +1,6 @@
 package codesquad.bows.member.entity;
 
+import codesquad.bows.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,10 +13,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class Role extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @Column(name = "NAME", nullable = false)

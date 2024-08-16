@@ -65,9 +65,8 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtTokenProvider.createJwt(userDetails.getUsername(), authorities, 3600000L);
 
         // Authorization Header에 보내려면 이것.
-//        response.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + token);
+        // response.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + token);
 
-//         토큰을 JSON형태로 보내려면 이것 사용
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         Map<String, String> tokenResponse = new HashMap<>();

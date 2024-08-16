@@ -63,11 +63,11 @@ public class Project extends BaseTimeEntity {
 
     @NotNull
     @Column(name = "CREATED_BY")
-    private Long createdBy;
+    private String createdBy;
 
     public Project(String projectName, String domain, String backendImageName, String frontendImageName,
                    Integer dbStorageSize, String dbSchema, String dbPassword, String dbEndpoint,
-                   String dbUserName, String dbUserPassword, Long createdBy)
+                   String dbUserName, String dbUserPassword, String createdBy)
     {
         this.projectName = projectName;
         this.domain = domain;

@@ -20,8 +20,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query(""" 
            SELECT new codesquad.bows.project.dto.ProjectMetadata(p.id, p.projectName, p.createdAt, p.domain, p.createdBy)
            FROM Project p
+           WHERE p.createdBy = :userId
            """)
-    List<ProjectMetadata> findAllProjectMetadata();
+    List<ProjectMetadata> findAllProjectMetadataOfUser(String userId);
 
     boolean existsByDomain(String domain);
+
+    boolean existsByIdAndCreatedBy(Long id, String createdBy);
 }

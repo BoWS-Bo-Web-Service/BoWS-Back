@@ -37,7 +37,7 @@ public class ProjectController {
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
-        projectService.deleteProject(projectId);
+        projectService.deleteProject(projectId, SecurityUtils.getLoginUserId());
         return ResponseEntity.ok().build();
     }
 
@@ -48,6 +48,6 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<List<ProjectMetadata>> getProjectList() {
-        return ResponseEntity.ok(projectService.findAllMetaData());
+        return ResponseEntity.ok(projectService.findAllMetaDataOfUser(SecurityUtils.getLoginUserId()));
     }
 }

@@ -8,7 +8,6 @@ import codesquad.bows.project.exception.ProjectNotExistsException;
 import codesquad.bows.project.repository.ProjectRepository;
 
 import codesquad.bows.project.entity.Project;
-import codesquad.bows.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,9 +24,9 @@ public class ProjectService {
     private final KubeExecutor kubeExecutor;
 
     @PostAuthorize("""
-        returnObject.createdBy() == principal.id 
-        or hasRole(T(codesquad.bows.member.entity.RoleName).ADMIN.name()) 
-        or hasRole(T(codesquad.bows.member.entity.RoleName).READ_ONLY.name())
+        returnObject.createdBy() == principal.username 
+        and (hasRole(T(codesquad.bows.member.entity.RoleName).ADMIN.name()) 
+        or hasRole(T(codesquad.bows.member.entity.RoleName).READ_ONLY.name()))
         """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
@@ -41,8 +40,8 @@ public class ProjectService {
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
-    public void deleteProject(Long projectId) {
-        if (!projectRepository.existsById(projectId)){
+    public void deleteProject(Long projectId, String userId) {
+        if (!projectRepository.existsByIdAndCreatedBy(projectId, userId)){
             throw new ProjectNotExistsException();
         }
         projectRepository.deleteById(projectId);
@@ -61,7 +60,7 @@ public class ProjectService {
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")
-    public List<ProjectMetadata> findAllMetaData() {
-        return projectRepository.findAllProjectMetadata();
+    public List<ProjectMetadata> findAllMetaDataOfUser(String userId) {
+        return projectRepository.findAllProjectMetadataOfUser(userId);
     }
 }
