@@ -32,10 +32,10 @@ public class DataInitializer {
         initRoles();
 
         // Admin 계정 등록
-        createMember("admin", "admin", RoleName.ADMIN);
+        createMember("admin", "admin", RoleName.ADMIN, "관리자");
 
         // Readonly 계정 등록
-        createMember("guest", "guest", RoleName.READ_ONLY);
+        createMember("guest", "guest", RoleName.READ_ONLY, "게스트");
     }
 
     private void initRoles() {
@@ -61,16 +61,17 @@ public class DataInitializer {
         }
     }
 
-    private void createMember(String username, String password, RoleName roleName) {
-        if (memberRepository.findByUsername(username).isPresent())
+    private void createMember(String username, String password, RoleName roleName, String name) {
+        if (memberRepository.findByUserId(username).isPresent())
             return;
 
         Role adminRole = roleRepository.findByName(roleName.name())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Role이 존재하지 않습니다."));
 
         Member adminMember = Member.builder()
-                .username(username)
+                .userId(username)
                 .password(passwordEncoder.encode(password))
+                .name(name)
                 .roles(Set.of(adminRole))
                 .build();
         memberRepository.save(adminMember);

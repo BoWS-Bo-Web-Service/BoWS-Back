@@ -20,11 +20,14 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USERNAME", nullable = false)
-    private String username;
+    @Column(name = "USER_ID", nullable = false)
+    private String userId;
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

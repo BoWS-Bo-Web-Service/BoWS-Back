@@ -19,7 +19,7 @@ public class KubeClientConfig {
 
     @Bean
     public ApiClient apiClient() throws IOException {
-        String kubeConfigPath = System.getenv("HOME") + configPath;
+        String kubeConfigPath = "C:\\Users\\shaki" + configPath;
         ApiClient client = ClientBuilder
                 .kubeconfig(KubeConfig.loadKubeConfig(new FileReader(kubeConfigPath)))
                 .build();

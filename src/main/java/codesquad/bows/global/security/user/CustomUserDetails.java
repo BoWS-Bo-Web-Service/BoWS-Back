@@ -1,4 +1,4 @@
-package codesquad.bows.member.entity;
+package codesquad.bows.global.security.user;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
