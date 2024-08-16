@@ -1,6 +1,7 @@
 package codesquad.bows.global.config;
 
 import io.kubernetes.client.openapi.ApiClient;
+import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.KubeConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,5 +25,10 @@ public class KubeClientConfig {
                 .build();
         io.kubernetes.client.openapi.Configuration.setDefaultApiClient(client);
         return client;
+    }
+
+    @Bean
+    public CoreV1Api coreV1Api(ApiClient apiClient) {
+        return new CoreV1Api(apiClient);
     }
 }

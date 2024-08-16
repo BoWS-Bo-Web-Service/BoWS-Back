@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,14 @@ public class Project extends BaseTimeEntity {
     private String frontendImageName;
 
     @NotNull
+    @Column(name = "DB_STORAGE_SIZE")
+    private Integer dbStorageSize;
+
+    @Lob
+    @Column(name = "DB_SCHEMA")
+    private String dbSchema;
+
+    @NotNull
     @Column(name = "DB_PASSWORD")
     private String dbPassword;
 
@@ -57,11 +66,15 @@ public class Project extends BaseTimeEntity {
     private Long createdBy;
 
     public Project(String projectName, String domain, String backendImageName, String frontendImageName,
-                   String dbPassword, String dbEndpoint, String dbUserName, String dbUserPassword, Long createdBy) {
+                   Integer dbStorageSize, String dbSchema, String dbPassword, String dbEndpoint,
+                   String dbUserName, String dbUserPassword, Long createdBy)
+    {
         this.projectName = projectName;
         this.domain = domain;
         this.backendImageName = backendImageName;
         this.frontendImageName = frontendImageName;
+        this.dbStorageSize = dbStorageSize;
+        this.dbSchema = dbSchema;
         this.dbPassword = dbPassword;
         this.dbEndpoint = dbEndpoint;
         this.dbUserName = dbUserName;
@@ -76,6 +89,8 @@ public class Project extends BaseTimeEntity {
         helmCLIArguments.put("domain", this.domain);
         helmCLIArguments.put("app.backend.image.name", this.backendImageName);
         helmCLIArguments.put("app.frontend.image.name", this.frontendImageName);
+        helmCLIArguments.put("app.db.storageSize", this.dbStorageSize + "Gi");
+        helmCLIArguments.put("app.db.schemaEncoded", Base64.getEncoder().encodeToString(this.dbSchema.getBytes()));
         helmCLIArguments.put("app.db.env.MYSQL_ROOT_PASSWORD", this.dbPassword);
         helmCLIArguments.put("app.db.env.MYSQL_DATABASE", this.dbEndpoint);
         helmCLIArguments.put("app.db.env.MYSQL_USER", this.dbUserName);

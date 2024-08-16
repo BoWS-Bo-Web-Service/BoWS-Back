@@ -3,6 +3,10 @@ package codesquad.bows.project.service;
 import codesquad.bows.project.dto.ProjectDetailResponse;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ServiceMetadata;
+import codesquad.bows.project.exception.DuplicatedDomainException;
+import codesquad.bows.project.exception.ProjectNotExistsException;
+import codesquad.bows.project.repository.ProjectRepository;
+
 import codesquad.bows.project.entity.Project;
 import codesquad.bows.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,9 @@ public class ProjectService {
         """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
+        if (!projectRepository.existsById(projectId)){
+            throw new ProjectNotExistsException();
+        }
         ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId);
         List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectMetadata.projectName());
         return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
@@ -35,6 +42,9 @@ public class ProjectService {
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public void deleteProject(Long projectId) {
+        if (!projectRepository.existsById(projectId)){
+            throw new ProjectNotExistsException();
+        }
         projectRepository.deleteById(projectId);
         kubeExecutor.deleteProjectInCluster(projectId);
     }
@@ -42,6 +52,9 @@ public class ProjectService {
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public Long addProject(Project project) {
+        if (projectRepository.existsByDomain(project.getDomain())) {
+            throw new DuplicatedDomainException();
+        }
         Project savedProject = projectRepository.save(project);
         kubeExecutor.createProjectInCluster(savedProject);
         return savedProject.getId();
