@@ -18,6 +18,7 @@ public record MemberRegisterData (
     String invitationCode,
 
     @NotNull
+    @Size(min = 1, max = 10)
     @Pattern(regexp = "^[a-zA-Z가-힣]+$", message = "이름은 한글 또는 영문만 가능합니다.")
     String name
     ) {
