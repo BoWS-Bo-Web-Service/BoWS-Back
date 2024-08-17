@@ -2,6 +2,7 @@ package codesquad.bows.member.service;
 
 
 import codesquad.bows.member.dto.MemberRegisterData;
+import codesquad.bows.member.dto.UserIdAvailableResponse;
 import codesquad.bows.member.entity.Member;
 import codesquad.bows.member.entity.Role;
 import codesquad.bows.member.entity.RoleName;
@@ -56,8 +57,13 @@ public class MemberService {
             throw new InvitationCodeMismatchException();
         }
 
-        if (memberRepository.findByUserId(data.userId()).isPresent()) {
+        if (memberRepository.existsByUserId(data.userId())) {
             throw new UsernameAlreadyExistsException();
         }
+    }
+
+    public UserIdAvailableResponse isUserIdExists(String userId) {
+        boolean userIdExists = memberRepository.existsByUserId(userId);
+        return new UserIdAvailableResponse(userId, !userIdExists);
     }
 }
