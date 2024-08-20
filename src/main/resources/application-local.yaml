@@ -35,6 +35,10 @@ kube:
     repoName: "simpleApp"
     chartName: "bows-simpleApp"
 
+security:
+  invitationCode: "ASDF"
+  jwtSecretKey: "dklfjalskjlkqjfmnfoqfnqowifnlkdaslkdjsanfalksfnasknlf"
+
 file:
   multipart:
     max-upload-size: 100

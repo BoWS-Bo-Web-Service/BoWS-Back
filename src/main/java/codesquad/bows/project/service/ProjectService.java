@@ -9,6 +9,8 @@ import codesquad.bows.project.repository.ProjectRepository;
 
 import codesquad.bows.project.entity.Project;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,11 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final KubeExecutor kubeExecutor;
 
+    @PostAuthorize("""
+        returnObject.createdBy() == principal.username 
+        and (hasRole(T(codesquad.bows.member.entity.RoleName).ADMIN.name()) 
+        or hasRole(T(codesquad.bows.member.entity.RoleName).READ_ONLY.name()))
+        """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
         if (!projectRepository.existsById(projectId)){
@@ -31,19 +38,17 @@ public class ProjectService {
         return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
     }
 
+    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
-    public void deleteProject(Long projectId) {
-        if (!projectRepository.existsById(projectId)){
+    public void deleteProject(Long projectId, String userId) {
+        if (!projectRepository.existsByIdAndCreatedBy(projectId, userId)){
             throw new ProjectNotExistsException();
         }
         projectRepository.deleteById(projectId);
         kubeExecutor.deleteProjectInCluster(projectId);
     }
 
-    public List<Project> findAll() {
-        return projectRepository.findAll();
-    }
-
+    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public Long addProject(Project project) {
         if (projectRepository.existsByDomain(project.getDomain())) {
@@ -54,7 +59,8 @@ public class ProjectService {
         return savedProject.getId();
     }
 
-    public List<ProjectMetadata> findAllMetaData() {
-        return projectRepository.findAllProjectMetadata();
+    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")
+    public List<ProjectMetadata> findAllMetaDataOfUser(String userId) {
+        return projectRepository.findAllProjectMetadataOfUser(userId);
     }
 }

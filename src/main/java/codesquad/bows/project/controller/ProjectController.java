@@ -1,5 +1,6 @@
 package codesquad.bows.project.controller;
 
+import codesquad.bows.common.SecurityUtils;
 import codesquad.bows.project.dto.ProjectCreateRequest;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ProjectDetailResponse;
@@ -27,12 +28,16 @@ public class ProjectController {
             @Valid @ModelAttribute ProjectCreateRequest request,
             @RequestPart(value = "dbSchemaFile") MultipartFile dbSchemaFile
     ) {
-        return ResponseEntity.ok(projectService.addProject(request.toEntity(dbSchemaFile)));
+        return ResponseEntity.ok(
+                projectService.addProject(
+                        request.toEntity(dbSchemaFile, SecurityUtils.getLoginUserId())
+                )
+        );
     }
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
-        projectService.deleteProject(projectId);
+        projectService.deleteProject(projectId, SecurityUtils.getLoginUserId());
         return ResponseEntity.ok().build();
     }
 
@@ -43,6 +48,6 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<List<ProjectMetadata>> getProjectList() {
-        return ResponseEntity.ok(projectService.findAllMetaData());
+        return ResponseEntity.ok(projectService.findAllMetaDataOfUser(SecurityUtils.getLoginUserId()));
     }
 }

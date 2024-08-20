@@ -1,10 +1,12 @@
 package codesquad.bows.global.exception;
 
+import codesquad.bows.global.exception.response.AccessDeniedExceptionResponse;
 import codesquad.bows.global.exception.response.BusinessExceptionResponse;
 import codesquad.bows.global.exception.response.ValidExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,5 +31,14 @@ public class GlobalExceptionHandler {
         log.error(response.toString());
 
         return new ResponseEntity<>(response, e.getExceptionType().getHttpStatus());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException e) {
+        AccessDeniedExceptionResponse response = AccessDeniedExceptionResponse.from(e);
+
+        log.error(response.toString());
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 }

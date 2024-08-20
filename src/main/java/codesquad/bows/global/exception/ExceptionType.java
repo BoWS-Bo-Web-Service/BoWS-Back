@@ -6,6 +6,12 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ExceptionType {
 
+    // User
+    UNAUTHENTICATED_USER(HttpStatus.UNAUTHORIZED, 4001, "인증되지 않은 사용자입니다"),
+    INVITATION_CODE_MISMATCH(HttpStatus.BAD_REQUEST, 4002, "초대코드가 일치하지 않습니다."),
+    USERNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, 4003, "중복된 아이디를 입력했습니다."),
+    ROLE_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 4004, "회원가입이 실패했습니다. 관리자에게 문의해주세요"),
+
     // PROJECT CRUD
     PROJECT_CREATE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "프로젝트 생성에 실패했습니다"),
     PROJECT_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5002, "프로젝트 삭제에 실패했습니다"),
@@ -14,6 +20,8 @@ public enum ExceptionType {
 
     // Kubernetes Client
     KUBECTL_EXECUTION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5101, "쿠버네티스 제어 중 에러가 발생했습니다");
+
+
 
     private final HttpStatus httpStatus;
     private final Integer code;

@@ -61,9 +61,14 @@ public class Project extends BaseTimeEntity {
     @Column(name = "DB_USER_PASSWORD")
     private String dbUserPassword;
 
+    @NotNull
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
     public Project(String projectName, String domain, String backendImageName, String frontendImageName,
-                   Integer dbStorageSize, String dbSchema,
-                   String dbPassword, String dbEndpoint, String dbUserName, String dbUserPassword) {
+                   Integer dbStorageSize, String dbSchema, String dbPassword, String dbEndpoint,
+                   String dbUserName, String dbUserPassword, String createdBy)
+    {
         this.projectName = projectName;
         this.domain = domain;
         this.backendImageName = backendImageName;
@@ -74,6 +79,7 @@ public class Project extends BaseTimeEntity {
         this.dbEndpoint = dbEndpoint;
         this.dbUserName = dbUserName;
         this.dbUserPassword = dbUserPassword;
+        this.createdBy = createdBy;
     }
 
     public Map<String, String> getProjectOptions() {
