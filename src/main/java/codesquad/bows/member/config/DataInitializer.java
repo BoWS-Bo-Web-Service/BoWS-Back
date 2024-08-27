@@ -7,11 +7,13 @@ import codesquad.bows.member.repository.RoleRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Profile("local")
 @Configuration
 @RequiredArgsConstructor
 public class DataInitializer {
