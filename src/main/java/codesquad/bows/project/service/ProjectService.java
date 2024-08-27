@@ -25,8 +25,7 @@ public class ProjectService {
 
     @PostAuthorize("""
         returnObject.createdBy() == principal.username 
-        and (hasRole(T(codesquad.bows.member.entity.RoleName).ADMIN.name()) 
-        or hasRole(T(codesquad.bows.member.entity.RoleName).READ_ONLY.name()))
+        and hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())
         """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
