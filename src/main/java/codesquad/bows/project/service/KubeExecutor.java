@@ -6,10 +6,14 @@ import codesquad.bows.project.entity.Project;
 import codesquad.bows.project.exception.KubeException;
 import codesquad.bows.project.exception.DeletionFailedException;
 import codesquad.bows.project.exception.CreationFailedException;
+import io.kubernetes.client.extended.kubectl.Kubectl;
+import io.kubernetes.client.extended.kubectl.exception.KubectlException;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.V1Pod;
+import io.kubernetes.client.openapi.models.V1Secret;
 import io.kubernetes.client.openapi.models.V1Service;
+import io.kubernetes.client.proto.V1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +36,8 @@ public class KubeExecutor {
 
     private final CoreV1Api coreV1Api;
 
+    private final String namespace = "my-app";
+
 
     // ProjectId를 Release 이름으로 설정하여 Helm 배포 커맨드 생성
     public void createProjectInCluster(Project project){
@@ -47,12 +53,21 @@ public class KubeExecutor {
     public void deleteProjectInCluster(Long projectId){
         String command = "helm uninstall " + projectId;
         BashExecutor.executeCommand(command, DeletionFailedException::new);
+
+        String secretName = "certificate-" + projectId;
+        try {
+            Kubectl.delete(V1Secret.class).namespace(namespace).name(secretName).execute();
+        } catch (KubectlException e) {
+            log.error(e.getMessage());
+
+            throw new KubeException();
+        }
     }
 
     public List<ServiceMetadata> getServiceMetadataOf(String projectName) {
         try {
             List<V1Service> services = coreV1Api
-                    .listNamespacedService("my-app")
+                    .listNamespacedService(namespace)
                     .labelSelector("projectName" + "=" + projectName)
                     .execute().getItems();
 
@@ -71,7 +86,7 @@ public class KubeExecutor {
     public ServiceState getServiceStateFrom(V1Service service) {
         try {
             String labelSelector = getLabelSelector(service);
-            V1Pod pod = coreV1Api.listNamespacedPod("my-app")
+            V1Pod pod = coreV1Api.listNamespacedPod(namespace)
                     .labelSelector(labelSelector)
                     .execute()
                     .getItems()
