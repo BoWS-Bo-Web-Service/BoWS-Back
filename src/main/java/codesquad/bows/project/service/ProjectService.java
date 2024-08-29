@@ -4,6 +4,7 @@ import codesquad.bows.project.dto.ProjectDetailResponse;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ServiceMetadata;
 import codesquad.bows.project.exception.DuplicatedDomainException;
+import codesquad.bows.project.exception.DuplicatedProjectNameException;
 import codesquad.bows.project.exception.ProjectNotExistsException;
 import codesquad.bows.project.repository.ProjectRepository;
 
@@ -50,12 +51,19 @@ public class ProjectService {
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public Long addProject(Project project) {
-        if (projectRepository.existsByDomain(project.getDomain())) {
-            throw new DuplicatedDomainException();
-        }
+        verifyProjectInput(project);
         Project savedProject = projectRepository.save(project);
         kubeExecutor.createProjectInCluster(savedProject);
         return savedProject.getId();
+    }
+
+    private void verifyProjectInput(Project project){
+        if (projectRepository.existsByDomain(project.getDomain())) {
+            throw new DuplicatedDomainException();
+        }
+        if (projectRepository.existsByProjectNameAndCreatedBy(project.getProjectName(), project.getCreatedBy())){
+            throw new DuplicatedProjectNameException();
+        }
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")
