@@ -1,4 +1,4 @@
-package codesquad.bows.common;
+package codesquad.bows.global.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +16,8 @@ import java.util.List;
 public class JwtTokenProvider {
 
     private final SecretKey secretKey; //JWT 토큰 객체 키를 저장할 시크릿 키
+    private final Long accessTokenExpiredMs = 30 * 60 * 1000L;
+    private final Long refreshTokenExpiredMs = 7 * 24 * 60 * 60 * 1000L;
 
     public JwtTokenProvider(@Value("${security.jwtSecretKey}") String secret) {
         this.secretKey = new SecretKeySpec(
@@ -43,18 +45,28 @@ public class JwtTokenProvider {
                 .before(new Date());
     }
 
-    public String createJwt(String username, List<String> authorities, Long expiredMs) {
+    public String createAccessToken(String username, List<String> authorities) {
 
         return Jwts.builder()
                 .claim("username", username)
                 .claim("roles", authorities)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiredMs))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String getJwt(HttpServletRequest request) {
+    public String createRefreshToken(String username) {
+
+        return Jwts.builder()
+                .claim("username", username)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiredMs))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String getJwtFromRequestHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -69,5 +81,4 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
 }

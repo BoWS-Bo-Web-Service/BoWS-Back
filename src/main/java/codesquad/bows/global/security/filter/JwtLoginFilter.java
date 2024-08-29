@@ -1,6 +1,6 @@
 package codesquad.bows.global.security.filter;
 
-import codesquad.bows.common.JwtTokenProvider;
+import codesquad.bows.global.security.jwt.JwtTokenProvider;
 import codesquad.bows.global.security.user.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -62,7 +62,8 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         List<String> authorities = userDetails.getAuthorities().stream()
                 .map(auth -> auth.getAuthority())
                 .toList();
-        String token = jwtTokenProvider.createJwt(userDetails.getUsername(), authorities, 3600000L);
+        String accessToken = jwtTokenProvider.createAccessToken(userDetails.getUsername(), authorities);
+        String refreshToken = jwtTokenProvider.createRefreshToken(userDetails.getUsername());
 
         // Authorization Header에 보내려면 이것.
         // response.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + token);
@@ -70,7 +71,8 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         Map<String, String> tokenResponse = new HashMap<>();
-        tokenResponse.put("token", token);
+        tokenResponse.put("accessToken", accessToken);
+        tokenResponse.put("refreshToken", refreshToken);
         new ObjectMapper().writeValue(response.getWriter(), tokenResponse);
     }
 

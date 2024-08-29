@@ -1,6 +1,7 @@
 package codesquad.bows.global.security.config;
 
-import codesquad.bows.common.JwtTokenProvider;
+import codesquad.bows.global.security.CustomAuthenticationEntryPoint;
+import codesquad.bows.global.security.jwt.JwtTokenProvider;
 import codesquad.bows.global.security.filter.CustomAuthenticationFailureHandler;
 import codesquad.bows.global.security.filter.JwtAuthorizationFilter;
 import codesquad.bows.global.security.filter.JwtLoginFilter;
@@ -26,6 +27,7 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {

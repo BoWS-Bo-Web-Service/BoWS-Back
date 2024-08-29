@@ -12,6 +12,10 @@ public enum ExceptionType {
     USERNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, 4003, "중복된 아이디를 입력했습니다."),
     ROLE_NOT_EXISTS(HttpStatus.INTERNAL_SERVER_ERROR, 4004, "회원가입이 실패했습니다. 관리자에게 문의해주세요"),
 
+    // Refresh Token
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 4101, "리프레시 토큰이 만료되었습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, 4102, "유효하지 않은 리프레시 토큰입니다."),
+
     // PROJECT CRUD
     PROJECT_CREATE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "프로젝트 생성에 실패했습니다"),
     PROJECT_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5002, "프로젝트 삭제에 실패했습니다"),
