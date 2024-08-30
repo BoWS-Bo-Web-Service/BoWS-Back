@@ -64,11 +64,11 @@ public class KubeExecutor {
         }
     }
 
-    public List<ServiceMetadata> getServiceMetadataOf(String projectName) {
+    public List<ServiceMetadata> getServiceMetadataOf(Long projectId) {
         try {
             List<V1Service> services = coreV1Api
                     .listNamespacedService(namespace)
-                    .labelSelector("projectName" + "=" + projectName)
+                    .labelSelector("projectId" + "=" + projectId)
                     .execute().getItems();
 
             return services.stream()
