@@ -30,7 +30,7 @@ public class ProjectService {
         """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
-        if (!projectRepository.existsById(projectId)){
+        if (!projectRepository.existsByIdAndIsDeletedIsFalse(projectId)){
             throw new ProjectNotExistsException();
         }
         ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId);
@@ -41,10 +41,10 @@ public class ProjectService {
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public void deleteProject(Long projectId, String userId) {
-        if (!projectRepository.existsByIdAndCreatedBy(projectId, userId)){
+        if (!projectRepository.existsByIdAndCreatedByAndIsDeletedIsFalse(projectId, userId)){
             throw new ProjectNotExistsException();
         }
-        projectRepository.deleteById(projectId);
+        projectRepository.softDeleteById(projectId);
         kubeExecutor.deleteProjectInCluster(projectId);
     }
 
@@ -58,10 +58,12 @@ public class ProjectService {
     }
 
     private void verifyProjectInput(Project project){
-        if (projectRepository.existsByDomain(project.getDomain())) {
+        if (projectRepository.existsByDomainAndIsDeletedIsFalse(project.getDomain())) {
             throw new DuplicatedDomainException();
         }
-        if (projectRepository.existsByProjectNameAndCreatedBy(project.getProjectName(), project.getCreatedBy())){
+        if (projectRepository.existsByProjectNameAndCreatedByAndIsDeletedIsFalse(
+                project.getProjectName(), project.getCreatedBy())
+        ){
             throw new DuplicatedProjectNameException();
         }
     }
