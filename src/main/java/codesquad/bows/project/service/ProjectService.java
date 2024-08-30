@@ -34,7 +34,7 @@ public class ProjectService {
             throw new ProjectNotExistsException();
         }
         ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId);
-        List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectMetadata.projectName());
+        List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectId);
         return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
     }
 

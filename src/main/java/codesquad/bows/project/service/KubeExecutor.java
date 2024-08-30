@@ -53,22 +53,13 @@ public class KubeExecutor {
     public void deleteProjectInCluster(Long projectId){
         String command = "helm uninstall " + projectId;
         BashExecutor.executeCommand(command, DeletionFailedException::new);
-
-        String secretName = "certificate-" + projectId;
-        try {
-            Kubectl.delete(V1Secret.class).namespace(namespace).name(secretName).execute();
-        } catch (KubectlException e) {
-            log.error(e.getMessage());
-
-            throw new KubeException();
-        }
     }
 
-    public List<ServiceMetadata> getServiceMetadataOf(String projectName) {
+    public List<ServiceMetadata> getServiceMetadataOf(Long projectId) {
         try {
             List<V1Service> services = coreV1Api
                     .listNamespacedService(namespace)
-                    .labelSelector("projectName" + "=" + projectName)
+                    .labelSelector("projectId" + "=" + projectId)
                     .execute().getItems();
 
             return services.stream()
