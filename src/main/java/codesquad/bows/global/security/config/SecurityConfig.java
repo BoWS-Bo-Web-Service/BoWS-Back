@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +31,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint entryPoint;
+    private final HandlerExceptionResolver handlerExceptionResolver;
     private final TokenService tokenService;
 
     @Bean
@@ -47,7 +49,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
-        CustomAuthenticationFailureHandler authFailureHandler = new CustomAuthenticationFailureHandler();
+        CustomAuthenticationFailureHandler authFailureHandler = new CustomAuthenticationFailureHandler(handlerExceptionResolver);
         CustomAuthenticationSuccessHandler authSuccessHandler = new CustomAuthenticationSuccessHandler(jwtTokenProvider, tokenService);
 
         // JwtLoginFilter에 AuthenticationManager 주입
