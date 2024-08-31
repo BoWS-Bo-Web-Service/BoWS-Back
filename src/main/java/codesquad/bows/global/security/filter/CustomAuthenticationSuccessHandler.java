@@ -35,6 +35,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String accessToken = jwtTokenProvider.createAccessToken(userDetails.getUsername(), authorities);
         String refreshToken = jwtTokenProvider.createRefreshToken(userDetails.getUsername());
 
+        tokenService.saveRefreshToken(refreshToken, userDetails.getUsername());
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         Map<String, String> tokenResponse = new HashMap<>();
