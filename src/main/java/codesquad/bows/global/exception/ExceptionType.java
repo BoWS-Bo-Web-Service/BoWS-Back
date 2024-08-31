@@ -16,9 +16,9 @@ public enum ExceptionType {
 
     // Token
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 4101, "토큰이 만료되었습니다."),
-    INVALID_TOKEN_SIGNATURE(HttpStatus.UNAUTHORIZED, 4102, "토큰의 서명이 올바르지 않습니다."),
-    MALFORMED_TOKEN(HttpStatus.UNAUTHORIZED, 4103, "토큰이 변형되었습니다."),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 4104, "유효하지 않은 토큰입니다."),
+    INVALID_TOKEN_SIGNATURE(HttpStatus.BAD_REQUEST, 4102, "토큰의 서명이 올바르지 않습니다."),
+    MALFORMED_TOKEN(HttpStatus.BAD_REQUEST, 4103, "토큰이 변형되었습니다."),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, 4104, "유효하지 않은 토큰입니다."),
     UNHANDLED_TOKEN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 4199, "관리되지 않는 Jwt 예외입니다."),
 
     // PROJECT CRUD
