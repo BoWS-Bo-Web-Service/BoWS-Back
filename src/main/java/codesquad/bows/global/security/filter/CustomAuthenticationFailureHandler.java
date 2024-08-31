@@ -14,7 +14,6 @@ import java.io.IOException;
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
-    // 인증 시도가 실패하는 경우에 이 메소드가 실행된다.
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.error("인증 실패: {}", exception.getMessage());
 
@@ -24,10 +23,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
         String errorMessage;
 
-        if (exception instanceof UsernameNotFoundException) {
-            errorMessage = "존재하지 않는 사용자입니다.";
-        } else if (exception instanceof BadCredentialsException){
-            errorMessage = "비밀번호가 틀렸습니다.";
+        if (exception instanceof BadCredentialsException){
+            errorMessage = "아이디 혹은 비밀번호가 틀렸습니다.";
         } else {
             errorMessage = "인증에 실패했습니다.";
         }

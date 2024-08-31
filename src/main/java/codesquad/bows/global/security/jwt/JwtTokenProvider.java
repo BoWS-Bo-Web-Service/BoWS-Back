@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class JwtTokenProvider {
 
     private final SecretKey secretKey; //JWT 토큰 객체 키를 저장할 시크릿 키
     private final Long accessTokenExpiredMs = 30 * 60 * 1000L;
-    private final Long refreshTokenExpiredMs = 2000 * 1000L;
+    private final Long refreshTokenExpiredMs = 30 * 1000L;
 
     public JwtTokenProvider(@Value("${security.jwtSecretKey}") String secret) {
         this.secretKey = new SecretKeySpec(
@@ -72,6 +74,14 @@ public class JwtTokenProvider {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    public LocalDateTime getExpirationDateFromToken(String token) {
+        Claims claims = parseClaims(token);
+        Date expiration = claims.getExpiration();
+        return expiration.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 
     public Claims parseClaims(String token) {
