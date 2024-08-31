@@ -4,6 +4,7 @@ import codesquad.bows.project.dto.ProjectDetailResponse;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ServiceMetadata;
 import codesquad.bows.project.exception.DuplicatedDomainException;
+import codesquad.bows.project.exception.DuplicatedProjectNameException;
 import codesquad.bows.project.exception.ProjectNotExistsException;
 import codesquad.bows.project.repository.ProjectRepository;
 
@@ -25,38 +26,46 @@ public class ProjectService {
 
     @PostAuthorize("""
         returnObject.createdBy() == principal.username 
-        and (hasRole(T(codesquad.bows.member.entity.RoleName).ADMIN.name()) 
-        or hasRole(T(codesquad.bows.member.entity.RoleName).READ_ONLY.name()))
+        and hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())
         """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
-        if (!projectRepository.existsById(projectId)){
+        if (!projectRepository.existsByIdAndIsDeletedIsFalse(projectId)){
             throw new ProjectNotExistsException();
         }
         ProjectMetadata projectMetadata = projectRepository.getMetadataById(projectId);
-        List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectMetadata.projectName());
+        List<ServiceMetadata> serviceMetadataList = kubeExecutor.getServiceMetadataOf(projectId);
         return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public void deleteProject(Long projectId, String userId) {
-        if (!projectRepository.existsByIdAndCreatedBy(projectId, userId)){
+        if (!projectRepository.existsByIdAndCreatedByAndIsDeletedIsFalse(projectId, userId)){
             throw new ProjectNotExistsException();
         }
-        projectRepository.deleteById(projectId);
+        projectRepository.softDeleteById(projectId);
         kubeExecutor.deleteProjectInCluster(projectId);
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
     @Transactional
     public Long addProject(Project project) {
-        if (projectRepository.existsByDomain(project.getDomain())) {
-            throw new DuplicatedDomainException();
-        }
+        verifyProjectInput(project);
         Project savedProject = projectRepository.save(project);
         kubeExecutor.createProjectInCluster(savedProject);
         return savedProject.getId();
+    }
+
+    private void verifyProjectInput(Project project){
+        if (projectRepository.existsByDomainAndIsDeletedIsFalse(project.getDomain())) {
+            throw new DuplicatedDomainException();
+        }
+        if (projectRepository.existsByProjectNameAndCreatedByAndIsDeletedIsFalse(
+                project.getProjectName(), project.getCreatedBy())
+        ){
+            throw new DuplicatedProjectNameException();
+        }
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")

@@ -50,9 +50,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } else {
-                // 토큰이 유효하지 않은 경우
                 SecurityContextHolder.clearContext();
-                System.out.println("ㅁㄴㅇㅁㄴㅇㅁㄴㅇ");
             }
         } catch (JwtException e) {
             if (e instanceof MalformedJwtException) {

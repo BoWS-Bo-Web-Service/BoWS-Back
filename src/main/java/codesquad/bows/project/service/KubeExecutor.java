@@ -6,10 +6,14 @@ import codesquad.bows.project.entity.Project;
 import codesquad.bows.project.exception.KubeException;
 import codesquad.bows.project.exception.DeletionFailedException;
 import codesquad.bows.project.exception.CreationFailedException;
+import io.kubernetes.client.extended.kubectl.Kubectl;
+import io.kubernetes.client.extended.kubectl.exception.KubectlException;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.V1Pod;
+import io.kubernetes.client.openapi.models.V1Secret;
 import io.kubernetes.client.openapi.models.V1Service;
+import io.kubernetes.client.proto.V1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +36,8 @@ public class KubeExecutor {
 
     private final CoreV1Api coreV1Api;
 
+    private final String namespace = "my-app";
+
 
     // ProjectId를 Release 이름으로 설정하여 Helm 배포 커맨드 생성
     public void createProjectInCluster(Project project){
@@ -39,8 +45,6 @@ public class KubeExecutor {
         String arguments = projectOptions.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining(",", "--set ", ""));
-        log.info(projectOptions.get("app.db.schema"));
-        log.info(arguments);
 
         String command = "helm install " + project.getId() + " " + HELM_REPO_NAME + "/" + CHART_NAME + " " + arguments;
         BashExecutor.executeCommand(command, CreationFailedException::new);
@@ -51,11 +55,11 @@ public class KubeExecutor {
         BashExecutor.executeCommand(command, DeletionFailedException::new);
     }
 
-    public List<ServiceMetadata> getServiceMetadataOf(String projectName) {
+    public List<ServiceMetadata> getServiceMetadataOf(Long projectId) {
         try {
             List<V1Service> services = coreV1Api
-                    .listNamespacedService("my-app")
-                    .labelSelector("projectName" + "=" + projectName)
+                    .listNamespacedService(namespace)
+                    .labelSelector("projectId" + "=" + projectId)
                     .execute().getItems();
 
             return services.stream()
@@ -73,7 +77,7 @@ public class KubeExecutor {
     public ServiceState getServiceStateFrom(V1Service service) {
         try {
             String labelSelector = getLabelSelector(service);
-            V1Pod pod = coreV1Api.listNamespacedPod("my-app")
+            V1Pod pod = coreV1Api.listNamespacedPod(namespace)
                     .labelSelector(labelSelector)
                     .execute()
                     .getItems()

@@ -4,6 +4,8 @@ import codesquad.bows.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -65,6 +67,10 @@ public class Project extends BaseTimeEntity {
     @Column(name = "CREATED_BY")
     private String createdBy;
 
+    @NotNull
+    @Column(name = "IS_DELETED")
+    private boolean isDeleted;
+
     public Project(String projectName, String domain, String backendImageName, String frontendImageName,
                    Integer dbStorageSize, String dbSchema, String dbPassword, String dbEndpoint,
                    String dbUserName, String dbUserPassword, String createdBy)
@@ -80,6 +86,7 @@ public class Project extends BaseTimeEntity {
         this.dbUserName = dbUserName;
         this.dbUserPassword = dbUserPassword;
         this.createdBy = createdBy;
+        this.isDeleted = false;
     }
 
     public Map<String, String> getProjectOptions() {
