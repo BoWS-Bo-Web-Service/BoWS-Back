@@ -3,6 +3,9 @@ package codesquad.bows.global.exception;
 import codesquad.bows.global.exception.response.AccessDeniedExceptionResponse;
 import codesquad.bows.global.exception.response.BusinessExceptionResponse;
 import codesquad.bows.global.exception.response.ValidExceptionResponse;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
+import io.swagger.annotations.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +43,10 @@ public class GlobalExceptionHandler {
         log.error(response.toString());
 
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<String> handleMalformedJwtException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("올바르지 않은 토큰입니다.");
     }
 }
