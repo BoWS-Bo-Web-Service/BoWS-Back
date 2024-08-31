@@ -1,4 +1,4 @@
-package codesquad.bows.global.security.jwt;
+package codesquad.bows.global.security.jwt.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

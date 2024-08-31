@@ -1,5 +1,6 @@
-package codesquad.bows.global.security.jwt;
+package codesquad.bows.global.security.jwt.repository;
 
+import codesquad.bows.global.security.jwt.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

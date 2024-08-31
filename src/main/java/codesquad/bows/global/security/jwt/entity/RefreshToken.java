@@ -1,4 +1,4 @@
-package codesquad.bows.global.security.jwt;
+package codesquad.bows.global.security.jwt.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

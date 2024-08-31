@@ -1,5 +1,6 @@
-package codesquad.bows.global.security.jwt;
+package codesquad.bows.global.security.jwt.controller;
 
+import codesquad.bows.global.security.jwt.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

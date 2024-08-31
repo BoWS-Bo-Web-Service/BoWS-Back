@@ -1,4 +1,4 @@
-package codesquad.bows.global.security.jwt;
+package codesquad.bows.global.security.filter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

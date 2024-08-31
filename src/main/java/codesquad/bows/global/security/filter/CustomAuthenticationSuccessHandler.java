@@ -1,7 +1,7 @@
 package codesquad.bows.global.security.filter;
 
 import codesquad.bows.global.security.jwt.JwtTokenProvider;
-import codesquad.bows.global.security.jwt.TokenService;
+import codesquad.bows.global.security.jwt.service.TokenService;
 import codesquad.bows.global.security.user.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
