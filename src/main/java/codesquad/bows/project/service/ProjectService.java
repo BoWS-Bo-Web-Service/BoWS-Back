@@ -1,5 +1,7 @@
 package codesquad.bows.project.service;
 
+import codesquad.bows.common.SecurityUtils;
+import codesquad.bows.member.entity.AuthorityName;
 import codesquad.bows.project.dto.ProjectDetailResponse;
 import codesquad.bows.project.dto.ProjectMetadata;
 import codesquad.bows.project.dto.ServiceMetadata;
@@ -17,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -25,8 +29,9 @@ public class ProjectService {
     private final KubeExecutor kubeExecutor;
 
     @PostAuthorize("""
-        returnObject.createdBy() == principal.username 
-        and hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())
+        (returnObject.createdBy() == principal.username 
+            and hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ_OWN.name()))
+        or hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ_ALL.name())
         """)
     @Transactional(readOnly = true)
     public ProjectDetailResponse getProjectDetail(Long projectId) {
@@ -38,7 +43,7 @@ public class ProjectService {
         return ProjectDetailResponse.of(projectMetadata, serviceMetadataList);
     }
 
-    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
+    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT_OWN.name())")
     @Transactional
     public void deleteProject(Long projectId, String userId) {
         if (!projectRepository.existsByIdAndCreatedByAndIsDeletedIsFalse(projectId, userId)){
@@ -48,7 +53,7 @@ public class ProjectService {
         kubeExecutor.deleteProjectInCluster(projectId);
     }
 
-    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_EDIT.name())")
+    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_CREATE.name())")
     @Transactional
     public Long addProject(Project project) {
         verifyProjectInput(project);
@@ -68,8 +73,17 @@ public class ProjectService {
         }
     }
 
-    @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ.name())")
-    public List<ProjectMetadata> findAllMetaDataOfUser(String userId) {
-        return projectRepository.findAllProjectMetadataOfUser(userId);
+    @PreAuthorize("""
+            hasAnyAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ_ALL.name()
+                ,T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ_OWN.name())
+            """)
+    public List<ProjectMetadata> getProjectList() {
+        if (SecurityUtils.hasAuthority(AuthorityName.PROJECT_READ_ALL.name())) {
+            return projectRepository.findAllProjectMetadata();
+        }
+        else {
+            return projectRepository.findAllProjectMetadataOfUser(SecurityUtils.getLoginUserId());
+        }
+
     }
 }

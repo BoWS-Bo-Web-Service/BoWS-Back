@@ -25,6 +25,13 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
            """)
     List<ProjectMetadata> findAllProjectMetadataOfUser(String userId);
 
+    @Query(""" 
+           SELECT new codesquad.bows.project.dto.ProjectMetadata(p.id, p.projectName, p.createdAt, p.domain, p.createdBy)
+           FROM Project p
+           WHERE p.isDeleted = false 
+           """)
+    List<ProjectMetadata> findAllProjectMetadata();
+
     @Modifying
     @Query("UPDATE Project p SET p.isDeleted = true WHERE p.id = :id")
     void softDeleteById(Long id);
