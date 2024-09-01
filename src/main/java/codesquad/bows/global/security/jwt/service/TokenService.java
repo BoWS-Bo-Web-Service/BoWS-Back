@@ -4,21 +4,17 @@ import codesquad.bows.global.security.jwt.JwtTokenProvider;
 import codesquad.bows.global.security.jwt.entity.RefreshToken;
 import codesquad.bows.global.security.jwt.exception.InvalidTokenException;
 import codesquad.bows.global.security.jwt.repository.RefreshTokenRepository;
-import codesquad.bows.global.security.user.CustomUserDetails;
-import codesquad.bows.global.security.user.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TokenService {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomUserDetailsService customUserDetailsService;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -36,7 +32,10 @@ public class TokenService {
     }
 
     public void saveRefreshToken(String refreshToken, String username) {
-        LocalDateTime expiration= jwtTokenProvider.getExpirationDateFromToken(refreshToken);
+        refreshTokenRepository.findByUsername(username)
+                .ifPresent(token -> refreshTokenRepository.deleteById(token.getId()));
+
+        LocalDateTime expiration = jwtTokenProvider.getExpirationDateFromToken(refreshToken);
 
         RefreshToken refreshTokenData = RefreshToken.builder()
                 .refreshToken(refreshToken)
