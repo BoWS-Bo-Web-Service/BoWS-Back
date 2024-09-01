@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class JwtTokenProvider {
@@ -28,10 +27,10 @@ public class JwtTokenProvider {
         );
     }
 
-    public String getUsername(String token) {
+    public String getUserId(String token) {
 
         return parseClaims(token)
-                .get("username",String.class);
+                .get("userId",String.class);
     }
 
     public String getRole(String token) {
@@ -47,20 +46,20 @@ public class JwtTokenProvider {
                 .before(new Date());
     }
 
-    public String createAccessToken(String username) {
+    public String createAccessToken(String userId) {
 
         return Jwts.builder()
-                .claim("username", username)
+                .claim("userId", userId)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiredMs))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String createRefreshToken(String username) {
+    public String createRefreshToken(String userId) {
 
         return Jwts.builder()
-                .claim("username", username)
+                .claim("userId", userId)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiredMs))
                 .signWith(secretKey)

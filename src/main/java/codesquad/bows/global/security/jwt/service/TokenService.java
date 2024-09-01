@@ -20,26 +20,26 @@ public class TokenService {
 
     public String refreshAccessToken(HttpServletRequest request) {
         String refreshToken = jwtTokenProvider.getJwtFromRequestHeader(request);
-        String username = jwtTokenProvider.getUsername(refreshToken);
+        String username = jwtTokenProvider.getUserId(refreshToken);
         RefreshToken savedToken = refreshTokenRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(InvalidTokenException::new);
 
-        if (!savedToken.getUsername().equals(username)) {
+        if (!savedToken.getUserId().equals(username)) {
             throw new InvalidTokenException();
         }
 
         return jwtTokenProvider.createAccessToken(username);
     }
 
-    public void saveRefreshToken(String refreshToken, String username) {
-        refreshTokenRepository.findByUsername(username)
+    public void saveRefreshToken(String refreshToken, String userId) {
+        refreshTokenRepository.findByUserId(userId)
                 .ifPresent(token -> refreshTokenRepository.deleteById(token.getId()));
 
         LocalDateTime expiration = jwtTokenProvider.getExpirationDateFromToken(refreshToken);
 
         RefreshToken refreshTokenData = RefreshToken.builder()
                 .refreshToken(refreshToken)
-                .username(username)
+                .userId(userId)
                 .expirationTime(expiration)
                 .build();
 

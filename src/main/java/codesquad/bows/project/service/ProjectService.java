@@ -57,7 +57,7 @@ public class ProjectService {
         }
 
         projectRepository.softDeleteById(projectId);
-        kubeExecutor.deleteProjectInCluster(projectId);
+//        kubeExecutor.deleteProjectInCluster(projectId);
     }
 
     @PreAuthorize("hasAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_CREATE.name())")
@@ -65,7 +65,7 @@ public class ProjectService {
     public Long addProject(Project project) {
         verifyProjectInput(project);
         Project savedProject = projectRepository.save(project);
-        kubeExecutor.createProjectInCluster(savedProject);
+//        kubeExecutor.createProjectInCluster(savedProject);
         return savedProject.getId();
     }
 

@@ -27,8 +27,8 @@ public class RefreshToken {
     private String refreshToken;
 
     @NotNull
-    @Column(name = "USERNAME")
-    private String username;
+    @Column(name = "USER_ID")
+    private String userId;
 
     @NotNull
     @Column(name = "EXPIRATION_TIME")
