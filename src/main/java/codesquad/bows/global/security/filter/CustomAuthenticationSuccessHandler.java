@@ -29,10 +29,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        List<String> authorities = userDetails.getAuthorities().stream()
-                .map(auth -> auth.getAuthority())
-                .toList();
-        String accessToken = jwtTokenProvider.createAccessToken(userDetails.getUsername(), authorities);
+        String accessToken = jwtTokenProvider.createAccessToken(userDetails.getUsername());
         String refreshToken = jwtTokenProvider.createRefreshToken(userDetails.getUsername());
 
         tokenService.saveRefreshToken(refreshToken, userDetails.getUsername());

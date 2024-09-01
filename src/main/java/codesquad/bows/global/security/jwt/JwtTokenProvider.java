@@ -47,7 +47,7 @@ public class JwtTokenProvider {
                 .before(new Date());
     }
 
-    public String createAccessToken(String username, List<String> authorities) {
+    public String createAccessToken(String username) {
 
         return Jwts.builder()
                 .claim("username", username)

@@ -32,12 +32,7 @@ public class TokenService {
             throw new InvalidTokenException();
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(username);
-        List<String> authorities = userDetails.getAuthorities().stream()
-                .map(auth -> auth.getAuthority())
-                .toList();
-
-        return jwtTokenProvider.createAccessToken(username, authorities);
+        return jwtTokenProvider.createAccessToken(username);
     }
 
     public void saveRefreshToken(String refreshToken, String username) {
