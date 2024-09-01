@@ -77,12 +77,12 @@ public class ProjectService {
             hasAnyAuthority(T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ_ALL.name()
                 ,T(codesquad.bows.member.entity.AuthorityName).PROJECT_READ_OWN.name())
             """)
-    public List<ProjectMetadata> getProjectList() {
+    public List<ProjectMetadata> getProjectList(String userId) {
         if (SecurityUtils.hasAuthority(AuthorityName.PROJECT_READ_ALL.name())) {
             return projectRepository.findAllProjectMetadata();
         }
         else {
-            return projectRepository.findAllProjectMetadataOfUser(SecurityUtils.getLoginUserId());
+            return projectRepository.findAllProjectMetadataOfUser(userId);
         }
 
     }

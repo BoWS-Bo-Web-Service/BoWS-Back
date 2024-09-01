@@ -48,6 +48,6 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<List<ProjectMetadata>> getProjectList() {
-        return ResponseEntity.ok(projectService.getProjectList());
+        return ResponseEntity.ok(projectService.getProjectList(SecurityUtils.getLoginUserId()));
     }
 }
