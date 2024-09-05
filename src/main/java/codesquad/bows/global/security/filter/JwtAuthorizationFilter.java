@@ -1,10 +1,7 @@
 package codesquad.bows.global.security.filter;
 
 import codesquad.bows.global.security.jwt.JwtTokenProvider;
-import codesquad.bows.global.security.jwt.exception.ExpiredTokenException;
-import codesquad.bows.global.security.jwt.exception.InvalidTokenSignatureException;
-import codesquad.bows.global.security.jwt.exception.MalformedTokenException;
-import codesquad.bows.global.security.jwt.exception.UnhandledJwtException;
+import codesquad.bows.global.security.jwt.exception.*;
 import codesquad.bows.global.security.user.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -57,7 +54,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 request.setAttribute("exception", new MalformedTokenException());
             }
             else if (e instanceof ExpiredJwtException) {
-                request.setAttribute("exception", new ExpiredTokenException());
+                if (request.getRequestURI().equals("/api/token/refresh")) {
+                    request.setAttribute("exception", new ExpiredRefreshTokenException());
+                } else {
+                    request.setAttribute("exception", new ExpiredTokenException());
+                }
             }
             else if (e instanceof SignatureException) {
                 request.setAttribute("exception", new InvalidTokenSignatureException());
