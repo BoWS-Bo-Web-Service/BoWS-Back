@@ -18,7 +18,7 @@ public class JwtTokenProvider {
 
     private final SecretKey secretKey; //JWT 토큰 객체 키를 저장할 시크릿 키
     private final Long accessTokenExpiredMs = 30 * 60 * 1000L;
-    private final Long refreshTokenExpiredMs = 10 * 1000L;
+    private final Long refreshTokenExpiredMs = 7 * 24 * 60 * 60 * 1000L;
 
     public JwtTokenProvider(@Value("${security.jwtSecretKey}") String secret) {
         this.secretKey = new SecretKeySpec(
