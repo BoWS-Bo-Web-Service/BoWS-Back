@@ -38,6 +38,10 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
+	// Logging
+	implementation 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
+	implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -48,4 +52,16 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+sourceSets {
+	main {
+		java {
+			exclude '**/DataInitializer.java'
+		}
+		resources {
+			exclude 'data.sql'
+			exclude 'schema.sql'
+		}
+	}
 }
