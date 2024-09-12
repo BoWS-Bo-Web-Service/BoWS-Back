@@ -28,7 +28,7 @@ public record ProjectCreateRequest(
         String backendImageName,
 
         @NotBlank
-        @Size(max = 30)
+        @Size(max = 128)
         String backendImageTag,
 
         @NotBlank
@@ -36,7 +36,7 @@ public record ProjectCreateRequest(
         String frontendImageName,
 
         @NotBlank
-        @Size(max = 30)
+        @Size(max = 128)
         String frontendImageTag,
 
         @NotNull
