@@ -26,6 +26,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     open-in-view: false
 
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
 cors:
   originUrl: http://localhost:5173
 
