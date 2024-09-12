@@ -4,8 +4,6 @@ import codesquad.bows.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -36,15 +34,22 @@ public class Project extends BaseTimeEntity {
     private String backendImageName;
 
     @NotNull
+    @Column(name = "BACKEND_IMAGE_TAG")
+    private String backendImageTag;
+
+    @NotNull
     @Column(name = "FRONTEND_IMAGE_NAME")
     private String frontendImageName;
 
     @NotNull
-    @Column(name = "DB_STORAGE_SIZE")
-    private Integer dbStorageSize;
+    @Column(name = "FRONTEND_IMAGE_TAG")
+    private String frontendImageTag;
 
-    @Lob
-    @Column(name = "DB_SCHEMA")
+    @NotNull
+    @Column(name = "DB_STORAGE_SIZE")
+    private Short dbStorageSize;
+
+    @Column(name = "DB_SCHEMA", columnDefinition = "MEDIUMTEXT")
     private String dbSchema;
 
     @NotNull
@@ -71,14 +76,17 @@ public class Project extends BaseTimeEntity {
     @Column(name = "IS_DELETED")
     private boolean isDeleted;
 
-    public Project(String projectName, String domain, String backendImageName, String frontendImageName,
-                   Integer dbStorageSize, String dbSchema, String dbPassword, String dbEndpoint,
+    public Project(String projectName, String domain, String backendImageName, String backendImageTag,
+                   String frontendImageName, String frontendImageTag,
+                   Short dbStorageSize, String dbSchema, String dbPassword, String dbEndpoint,
                    String dbUserName, String dbUserPassword, String createdBy)
     {
         this.projectName = projectName;
         this.domain = domain;
         this.backendImageName = backendImageName;
+        this.backendImageTag = backendImageTag;
         this.frontendImageName = frontendImageName;
+        this.frontendImageTag = frontendImageTag;
         this.dbStorageSize = dbStorageSize;
         this.dbSchema = dbSchema;
         this.dbPassword = dbPassword;
@@ -95,7 +103,9 @@ public class Project extends BaseTimeEntity {
         helmCLIArguments.put("projectId", String.valueOf(this.id));
         helmCLIArguments.put("domain", this.domain);
         helmCLIArguments.put("app.backend.image.name", this.backendImageName);
+        helmCLIArguments.put("app.backend.image.tag", this.backendImageTag);
         helmCLIArguments.put("app.frontend.image.name", this.frontendImageName);
+        helmCLIArguments.put("app.frontend.image.tag", this.frontendImageTag);
         helmCLIArguments.put("app.db.storageSize", this.dbStorageSize + "Gi");
         helmCLIArguments.put("app.db.schemaEncoded", Base64.getEncoder().encodeToString(this.dbSchema.getBytes()));
         helmCLIArguments.put("app.db.env.MYSQL_ROOT_PASSWORD", this.dbPassword);

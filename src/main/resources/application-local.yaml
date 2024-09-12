@@ -18,13 +18,17 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         show_sql: true
         format_sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
     open-in-view: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 cors:
   originUrl: http://localhost:5173
