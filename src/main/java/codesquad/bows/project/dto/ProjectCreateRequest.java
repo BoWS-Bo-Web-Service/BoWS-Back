@@ -29,11 +29,19 @@ public record ProjectCreateRequest(
 
         @NotBlank
         @Size(max = 30)
+        String backendImageTag,
+
+        @NotBlank
+        @Size(max = 30)
         String frontendImageName,
+
+        @NotBlank
+        @Size(max = 30)
+        String frontendImageTag,
 
         @NotNull
         @Range(min = 1, max = 3)
-        Integer dbStorageSize,
+        Short dbStorageSize,
 
         @NotNull
         @Size(min = 5, max = 30)
@@ -55,7 +63,7 @@ public record ProjectCreateRequest(
     public Project toEntity(MultipartFile dbSchemaFile, String createdBy) {
             try {
                     String dbSchema = new String(dbSchemaFile.getBytes(), StandardCharsets.UTF_8);
-                    return new Project(projectName, domain, backendImageName, frontendImageName,
+                    return new Project(projectName, domain, backendImageName, backendImageTag, frontendImageName, frontendImageTag,
                             dbStorageSize, dbSchema, dbPassword, dbEndpoint, dbUserName, dbUserPassword, createdBy);
             } catch (IOException e) {
                     throw new IllegalArgumentException("파일을 읽는 도중 실패했습니다");
